@@ -1,0 +1,62 @@
+version: '3.7'
+
+services:
+
+  db1:
+    image: library/postgres:9.6.17-alpine
+    environment:
+      - "POSTGRES_DB=openfire"
+      - "POSTGRES_USER=openfire"
+      - "POSTGRES_PASSWORD=hunter2"
+    volumes:
+      - ./sql/1:/docker-entrypoint-initdb.d
+    networks:
+      net-one:
+        ipv4_address: 172.50.0.11
+
+  db2:
+    image: library/postgres:9.6.17-alpine
+    environment:
+      - "POSTGRES_DB=openfire"
+      - "POSTGRES_USER=openfire"
+      - "POSTGRES_PASSWORD=hunter2"
+    volumes:
+      - ./sql/2:/docker-entrypoint-initdb.d
+    networks:
+      net-one:
+        ipv4_address: 172.50.0.21
+
+  xmpp1:
+    image: openfire:fmuc
+    ports:
+      - "5221:5222"
+      - "9091:9090"
+    depends_on:
+      - "db2"
+    volumes:
+      - ./_data/xmpp/1/conf:/var/lib/openfire/conf
+    networks:
+      net-one:
+        ipv4_address: 172.50.0.10
+
+  xmpp2:
+    image: openfire:fmuc
+    ports:
+      - "5222:5222"
+      - "9092:9090"
+    depends_on:
+      - "db2"
+    volumes:
+      - ./_data/xmpp/2/conf:/var/lib/openfire/conf
+    networks:
+      net-one:
+        ipv4_address: 172.50.0.20
+
+networks:
+  net-one:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.50.0.0/24
+
