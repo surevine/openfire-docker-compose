@@ -611,7 +611,7 @@ COPY public.ofid (idtype, id) FROM stdin;
 23	1
 26	2
 27	1
-25	4
+25	5
 \.
 
 
@@ -704,7 +704,7 @@ COPY public.ofproperty (name, propvalue, encrypted, iv) FROM stdin;
 user.scramHashedPasswordOnly	true	0	\N
 xmpp.socket.ssl.active	true	0	\N
 provider.admin.className	org.jivesoftware.openfire.admin.DefaultAdminProvider	0	\N
-xmpp.domain	localhost.example	0	\N
+xmpp.domain	xmpp2.localhost.example	0	\N
 xmpp.auth.anonymous	false	0	\N
 provider.auth.className	org.jivesoftware.openfire.auth.DefaultAuthProvider	0	\N
 provider.lockout.className	org.jivesoftware.openfire.lockout.DefaultLockOutProvider	0	\N
@@ -712,7 +712,7 @@ provider.group.className	org.jivesoftware.openfire.group.DefaultGroupProvider	0	
 provider.vcard.className	org.jivesoftware.openfire.vcard.DefaultVCardProvider	0	\N
 provider.securityAudit.className	org.jivesoftware.openfire.security.DefaultSecurityAuditProvider	0	\N
 provider.user.className	org.jivesoftware.openfire.user.DefaultUserProvider	0	\N
-update.lastCheck	1589374966441	0	\N
+update.lastCheck	1589969997215	0	\N
 \.
 
 
@@ -811,9 +811,10 @@ COPY public.ofsaslauthorized (username, principal) FROM stdin;
 --
 
 COPY public.ofsecurityauditlog (msgid, username, entrystamp, summary, node, details) FROM stdin;
-1	admin	1589374980787	Successful admin console login attempt	xmpp2.localhost.example	The user logged in successfully to the admin console from address 172.50.0.1. 
-2	admin	1589374997180	created new user user1	xmpp2.localhost.example	name = User One, email = null, admin = false
-3	admin	1589375051427	created new user user2	xmpp2.localhost.example	name = User Two, email = null, admin = false
+1	admin	1589969968285	Successful admin console login attempt	xmpp2.localhost.example	The user logged in successfully to the admin console from address 172.50.0.1. 
+2	admin	1589969986763	created new user user1	xmpp2.localhost.example	name = User One, email = null, admin = false
+3	admin	1589970003886	created new user user2	xmpp2.localhost.example	name = User Two, email = null, admin = false
+4	admin	1589970026353	Successful admin console login attempt	xmpp2.localhost.example	The user logged in successfully to the admin console from address 172.50.0.1. 
 \.
 
 
@@ -822,9 +823,9 @@ COPY public.ofsecurityauditlog (msgid, username, entrystamp, summary, node, deta
 --
 
 COPY public.ofuser (username, storedkey, serverkey, salt, iterations, plainpassword, encryptedpassword, name, email, creationdate, modificationdate) FROM stdin;
-admin	bQjNunFJD9An/QETV8vvlhlp+yM=	mAFOyrkEQ1Y2IikIIXWZeQCTCdI=	mGLSGHXFbEAMg0dPH7y+NKmx89N/cEp2	4096	\N	\N	Administrator	admin@example.com	0              	0              
-user1	AToqfo9C4Ta+5bRapHfgl92uXDI=	Y2OkwKy//6BwdNpCRN0rVLhkdVc=	FDilwFKCGp0qUg9E9byoGbb0SNuM6HUg	4096	\N	\N	User One	\N	001589374997156	001589374997156
-user2	ubU0YeWQiLUINpCPINI7eyZFr1U=	eE0ssGKX5J/tTk17NxDNnyH+C94=	bywh0rH3ogLs43V5b6Rfopm3Uu++yVBc	4096	\N	\N	User Two	\N	001589375051413	001589375051413
+admin	+40WbEXG/DPWcyptuoqy2/rmKgE=	z6N147e8IQm7c5+AJj7fr6qDhqs=	gE82Agy35CremB/GPqmMuPIduFRMjkRc	4096	\N	\N	Administrator	admin@example.com	0              	0              
+user1	+G6+jzD12IYr16DzuA0GDgW5ZKI=	F0f5ZPr4F0YBB/fqGu4ARN35ZLs=	v1WMYcRDffV/jHeVGjnpaxtuyH6jFUJz	4096	\N	\N	User One	\N	001589969986726	001589969986726
+user2	2NjgswI5jFN84U87j2r5Lut4t2A=	UNaElmqGi1LTgKxgNfmLaDqVtR4=	aV9LvUj9aa0rmOsLX5q086fUNDtM0llq	4096	\N	\N	User Two	\N	001589970003873	001589970003873
 \.
 
 
