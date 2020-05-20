@@ -45,8 +45,8 @@
     <defaultProvider>
       <driver>org.postgresql.Driver</driver> 
       <serverURL>jdbc:postgresql://db1:5432/openfire</serverURL> 
-      <username encrypted="true">db309104b58a24ce1c7d9cff837cc7db2c6ff1b7fd187caf544695ccf3542ba9</username> 
-      <password encrypted="true">a5ad683ff5c9488da961648db98bde41ed39af3aaa76d7ac</password> 
+      <username encrypted="true">f94224b486addc57cd2f192c4ad04f40d3892f2926d59d0fa2c10e3aa8f08183</username> 
+      <password encrypted="true">66e0163425910c48d61764883ee691e072319270b23732db</password> 
       <testSQL>select 1</testSQL> 
       <testBeforeUse>false</testBeforeUse> 
       <testAfterUse>false</testAfterUse> 

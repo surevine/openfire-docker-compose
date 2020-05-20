@@ -611,7 +611,7 @@ COPY public.ofid (idtype, id) FROM stdin;
 26	2
 23	6
 27	51
-25	7
+25	9
 \.
 
 
@@ -620,8 +620,8 @@ COPY public.ofid (idtype, id) FROM stdin;
 --
 
 COPY public.ofmucaffiliation (roomid, jid, affiliation) FROM stdin;
-1	admin@localhost.example	10
-2	admin@localhost.example	10
+1	admin@xmpp1.localhost.example	10
+2	admin@xmpp1.localhost.example	10
 \.
 
 
@@ -630,9 +630,8 @@ COPY public.ofmucaffiliation (roomid, jid, affiliation) FROM stdin;
 --
 
 COPY public.ofmucconversationlog (roomid, messageid, sender, nickname, logtime, subject, body, stanza) FROM stdin;
-1	1	muc1@conference.localhost.example	\N	001589367372981		\N	<message type="groupchat" from="muc1@conference.localhost.example" to="muc1@conference.localhost.example"><subject></subject></message>
-2	2	muc2@conference.localhost.example	\N	001589367388443		\N	<message type="groupchat" from="muc2@conference.localhost.example" to="muc2@conference.localhost.example"><subject></subject></message>
-2	3	muc2@conference.localhost.example	\N	001589367409138		\N	<message type="groupchat" from="muc2@conference.localhost.example" to="muc2@conference.localhost.example"><subject></subject></message>
+1	1	muc1@conference.xmpp1.localhost.example	\N	001589969810105		\N	<message type="groupchat" from="muc1@conference.xmpp1.localhost.example" to="muc1@conference.xmpp1.localhost.example"><subject></subject></message>
+2	2	muc2@conference.xmpp1.localhost.example	\N	001589969839581		\N	<message type="groupchat" from="muc2@conference.xmpp1.localhost.example" to="muc2@conference.xmpp1.localhost.example"><subject></subject></message>
 \.
 
 
@@ -649,8 +648,8 @@ COPY public.ofmucmember (roomid, jid, nickname, firstname, lastname, url, email,
 --
 
 COPY public.ofmucroom (serviceid, roomid, creationdate, modificationdate, name, naturalname, description, lockeddate, emptydate, canchangesubject, maxusers, publicroom, moderated, membersonly, caninvite, roompassword, candiscoverjid, logenabled, subject, rolestobroadcast, usereservednick, canchangenick, canregister, allowpm) FROM stdin;
-1	1	001589367372976	001589367372987	muc1	MUC One	First MUC Room	000000000000000	001589367372976	0	30	1	0	0	0	\N	0	1		7	0	1	1	0
-1	2	001589367388440	001589367409139	muc2	MUC Two	Second MUC Room	000000000000000	001589367388440	0	30	1	0	0	0	\N	0	1		7	0	1	1	0
+1	1	001589969810096	001589969810113	muc1	MUC One	The first MUC room	000000000000000	001589969810096	0	30	1	0	0	0	\N	0	1		7	0	1	1	0
+1	2	001589969839579	001589969839582	muc2	MUC Two	The second MUC room	000000000000000	001589969839579	0	30	1	0	0	0	\N	0	1		7	0	1	1	0
 \.
 
 
@@ -711,7 +710,7 @@ COPY public.ofproperty (name, propvalue, encrypted, iv) FROM stdin;
 user.scramHashedPasswordOnly	true	0	\N
 xmpp.socket.ssl.active	true	0	\N
 provider.admin.className	org.jivesoftware.openfire.admin.DefaultAdminProvider	0	\N
-xmpp.domain	localhost.example	0	\N
+xmpp.domain	xmpp1.localhost.example	0	\N
 xmpp.auth.anonymous	false	0	\N
 provider.auth.className	org.jivesoftware.openfire.auth.DefaultAuthProvider	0	\N
 provider.lockout.className	org.jivesoftware.openfire.lockout.DefaultLockOutProvider	0	\N
@@ -719,7 +718,7 @@ provider.group.className	org.jivesoftware.openfire.group.DefaultGroupProvider	0	
 provider.vcard.className	org.jivesoftware.openfire.vcard.DefaultVCardProvider	0	\N
 provider.securityAudit.className	org.jivesoftware.openfire.security.DefaultSecurityAuditProvider	0	\N
 provider.user.className	org.jivesoftware.openfire.user.DefaultUserProvider	0	\N
-update.lastCheck	1589367299877	0	\N
+update.lastCheck	1589969700591	0	\N
 \.
 
 
@@ -818,12 +817,14 @@ COPY public.ofsaslauthorized (username, principal) FROM stdin;
 --
 
 COPY public.ofsecurityauditlog (msgid, username, entrystamp, summary, node, details) FROM stdin;
-1	admin	1589367279639	Successful admin console login attempt	xmpp1.localhost.example	The user logged in successfully to the admin console from address 172.50.0.1. 
-2	admin	1589367337559	created new user user1	xmpp1.localhost.example	name = User One, email = null, admin = false
-3	admin	1589367352175	created new user user2	xmpp1.localhost.example	name = User Two, email = null, admin = false
-4	admin	1589367372997	created new MUC room muc1	xmpp1.localhost.example	subject = \nroomdesc = First MUC Room\nroomname = MUC One\nmaxusers = 30
-5	admin	1589367388451	created new MUC room muc2	xmpp1.localhost.example	subject = \nroomdesc = MUC Room Two\nroomname = MUC 2\nmaxusers = 30
-6	admin	1589367409143	updated MUC room muc2	xmpp1.localhost.example	subject = \nroomdesc = Second MUC Room\nroomname = MUC Two\nmaxusers = 30
+1	admin	1589969673420	Successful admin console login attempt	xmpp1.localhost.example	The user logged in successfully to the admin console from address 172.50.0.1. 
+2	admin	1589969739473	created new user user1	xmpp1.localhost.example	name = User One, email = null, admin = false
+3	admin	1589969754150	created new user user2	xmpp1.localhost.example	name = User 2, email = null, admin = false
+4	admin	1589969762256	edited user user2	xmpp1.localhost.example	set name = User Two, email = null, admin = false
+5	admin	1589969810129	created new MUC room muc1	xmpp1.localhost.example	subject = \nroomdesc = The first MUC room\nroomname = MUC One\nmaxusers = 30
+6	admin	1589969839590	created new MUC room muc2	xmpp1.localhost.example	subject = \nroomdesc = The second MUC room\nroomname = MUC Two\nmaxusers = 30
+7	admin	1589969876107	Successful admin console login attempt	xmpp1.localhost.example	The user logged in successfully to the admin console from address 172.50.0.1. 
+8	admin	1589970015359	Successful admin console login attempt	xmpp1.localhost.example	The user logged in successfully to the admin console from address 172.50.0.1. 
 \.
 
 
@@ -832,9 +833,9 @@ COPY public.ofsecurityauditlog (msgid, username, entrystamp, summary, node, deta
 --
 
 COPY public.ofuser (username, storedkey, serverkey, salt, iterations, plainpassword, encryptedpassword, name, email, creationdate, modificationdate) FROM stdin;
-admin	uU1kDb5SjcIsevaIXOJvxPrKnsk=	DATPf4SmOYsLTjmz3dee/jhF4OM=	TIusSDXL90AobohXRvGizqUqwrg6z22h	4096	\N	\N	Administrator	admin@example.com	0              	0              
-user1	WtYDUyH5rvUc8QaLOwuYzkj7Et4=	ZencBIscHsoZmgcGL+l3YGSiIwc=	6iKVuBontHuAiEAZ/jMjDB2CUQ/PrCX3	4096	\N	\N	User One	\N	001589367337531	001589367337531
-user2	p3iAoc0YJSkcIEELzlkKo3Dwkig=	PVya3lE3e0QyFFodSu9VF3B0bz0=	N60V7PKEHdTSj14BDEPrXioU9RIyh6S8	4096	\N	\N	User Two	\N	001589367352162	001589367352162
+admin	RkmhtYCqZjA8+E9l7dxcQBdJcIA=	vYtqqAoXOYARI5QMsqDKyn/WVJY=	U+RL6lNHSrJAt3EWynqLGzMOufZk4ZX8	4096	\N	\N	Administrator	admin@example.com	0              	0              
+user1	OA52wUHrBgujMrHUQmS1K7EBINY=	nLvVyejnwRVgJnAFUEihxoJVEH4=	P1Kjg4FQhMfTA2u9XEAam6T8IaqFjGEl	4096	\N	\N	User One	\N	001589969739427	001589969739427
+user2	a5UrgV7iwRFlRvt5E/hme7HCq9g=	HVruPkJXB83w1B4plK5GZ9xv2pM=	TyMmuzTW9qrp6VsK4l1B+Vy6L/ktqE+4	4096	\N	\N	User Two	\N	001589969754137	001589969754137
 \.
 
 

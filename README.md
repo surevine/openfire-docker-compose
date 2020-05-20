@@ -31,7 +31,7 @@ Running `./start.sh` will perform some cleanup then start the containers. When r
 Data and config snapshots have been taken of each DB and Openfire so that a known desired state is configured on start. 
 See the "How it's built" section below if you want to understand how this was done or need to add more nodes.
 
-Openfire is configured with the following hostnames:
+Openfire is configured with the following hostnames/XMPP domain names:
 * `xmpp1.localhost.example`
 * `xmpp2.localhost.example`
 
