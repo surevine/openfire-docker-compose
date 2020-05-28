@@ -38,6 +38,8 @@ services:
     networks:
       net-one:
         ipv4_address: 172.50.0.10
+    extra_hosts:
+      - "xmpp2.localhost.example:172.50.0.20"
 
   xmpp2:
     image: openfire:fmuc
@@ -51,7 +53,9 @@ services:
     networks:
       net-one:
         ipv4_address: 172.50.0.20
-
+    extra_hosts:
+      - "xmpp1.localhost.example:172.50.0.10"
+ 
 networks:
   net-one:
     driver: bridge
