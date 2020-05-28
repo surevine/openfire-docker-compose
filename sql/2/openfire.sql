@@ -608,10 +608,10 @@ COPY public.ofgroupuser (groupname, username, administrator) FROM stdin;
 COPY public.ofid (idtype, id) FROM stdin;
 18	1
 19	1
-23	1
 26	2
-27	1
-25	5
+23	6
+27	51
+25	6
 \.
 
 
@@ -620,6 +620,8 @@ COPY public.ofid (idtype, id) FROM stdin;
 --
 
 COPY public.ofmucaffiliation (roomid, jid, affiliation) FROM stdin;
+1	admin@xmpp2.localhost.example	10
+2	admin@xmpp2.localhost.example	10
 \.
 
 
@@ -628,6 +630,8 @@ COPY public.ofmucaffiliation (roomid, jid, affiliation) FROM stdin;
 --
 
 COPY public.ofmucconversationlog (roomid, messageid, sender, nickname, logtime, subject, body, stanza) FROM stdin;
+1	1	muc3@conference.xmpp2.localhost.example	\N	001590673309595		\N	<message type="groupchat" from="muc3@conference.xmpp2.localhost.example" to="muc3@conference.xmpp2.localhost.example"><subject></subject></message>
+2	2	muc4@conference.xmpp2.localhost.example	\N	001590673327591		\N	<message type="groupchat" from="muc4@conference.xmpp2.localhost.example" to="muc4@conference.xmpp2.localhost.example"><subject></subject></message>
 \.
 
 
@@ -644,6 +648,8 @@ COPY public.ofmucmember (roomid, jid, nickname, firstname, lastname, url, email,
 --
 
 COPY public.ofmucroom (serviceid, roomid, creationdate, modificationdate, name, naturalname, description, lockeddate, emptydate, canchangesubject, maxusers, publicroom, moderated, membersonly, caninvite, roompassword, candiscoverjid, logenabled, subject, rolestobroadcast, usereservednick, canchangenick, canregister, allowpm) FROM stdin;
+1	1	001590673309589	001590673309606	muc3	MUC Three	Third MUC room	000000000000000	001590673309589	0	30	1	0	0	0	\N	0	1		7	0	1	1	0
+1	2	001590673327588	001590673327593	muc4	MUC Four	Fourth MUC room	000000000000000	001590673327588	0	30	1	0	0	0	\N	0	1		7	0	1	1	0
 \.
 
 
@@ -712,7 +718,7 @@ provider.group.className	org.jivesoftware.openfire.group.DefaultGroupProvider	0	
 provider.vcard.className	org.jivesoftware.openfire.vcard.DefaultVCardProvider	0	\N
 provider.securityAudit.className	org.jivesoftware.openfire.security.DefaultSecurityAuditProvider	0	\N
 provider.user.className	org.jivesoftware.openfire.user.DefaultUserProvider	0	\N
-update.lastCheck	1589969997215	0	\N
+update.lastCheck	1590673249731	0	\N
 \.
 
 
@@ -811,10 +817,11 @@ COPY public.ofsaslauthorized (username, principal) FROM stdin;
 --
 
 COPY public.ofsecurityauditlog (msgid, username, entrystamp, summary, node, details) FROM stdin;
-1	admin	1589969968285	Successful admin console login attempt	xmpp2.localhost.example	The user logged in successfully to the admin console from address 172.50.0.1. 
-2	admin	1589969986763	created new user user1	xmpp2.localhost.example	name = User One, email = null, admin = false
-3	admin	1589970003886	created new user user2	xmpp2.localhost.example	name = User Two, email = null, admin = false
-4	admin	1589970026353	Successful admin console login attempt	xmpp2.localhost.example	The user logged in successfully to the admin console from address 172.50.0.1. 
+1	admin	1590673224063	Successful admin console login attempt	xmpp2.localhost.example	The user logged in successfully to the admin console from address 172.50.0.1. 
+2	admin	1590673243764	created new user user3	xmpp2.localhost.example	name = User Three, email = null, admin = false
+3	admin	1590673258818	created new user user4	xmpp2.localhost.example	name = User Four, email = null, admin = false
+4	admin	1590673309619	created new MUC room muc3	xmpp2.localhost.example	subject = \nroomdesc = Third MUC room\nroomname = MUC Three\nmaxusers = 30
+5	admin	1590673327602	created new MUC room muc4	xmpp2.localhost.example	subject = \nroomdesc = Fourth MUC room\nroomname = MUC Four\nmaxusers = 30
 \.
 
 
@@ -823,9 +830,9 @@ COPY public.ofsecurityauditlog (msgid, username, entrystamp, summary, node, deta
 --
 
 COPY public.ofuser (username, storedkey, serverkey, salt, iterations, plainpassword, encryptedpassword, name, email, creationdate, modificationdate) FROM stdin;
-admin	+40WbEXG/DPWcyptuoqy2/rmKgE=	z6N147e8IQm7c5+AJj7fr6qDhqs=	gE82Agy35CremB/GPqmMuPIduFRMjkRc	4096	\N	\N	Administrator	admin@example.com	0              	0              
-user1	+G6+jzD12IYr16DzuA0GDgW5ZKI=	F0f5ZPr4F0YBB/fqGu4ARN35ZLs=	v1WMYcRDffV/jHeVGjnpaxtuyH6jFUJz	4096	\N	\N	User One	\N	001589969986726	001589969986726
-user2	2NjgswI5jFN84U87j2r5Lut4t2A=	UNaElmqGi1LTgKxgNfmLaDqVtR4=	aV9LvUj9aa0rmOsLX5q086fUNDtM0llq	4096	\N	\N	User Two	\N	001589970003873	001589970003873
+admin	R27uuyBTC++BJ2cRkdlCc02GeF0=	J6GmmacXHQ3hjbMAO93Ip8vnu8M=	8xIB00mDYSHaKzDOm/ZDKraZwHLzv6qc	4096	\N	\N	Administrator	admin@example.com	0              	0              
+user3	cJJTKnzGgri4mnJZl7ZRvmdKJSA=	tgCiLecUYoedW5ChDsNH3O31Rh4=	aWqE7RHOMIPk1OjXnQi1wclXTxgabNG9	4096	\N	\N	User Three	\N	001590673243733	001590673243733
+user4	up8DR/iRy3dPy9Zt5s5Wnbga7Hk=	n46LRPiUcNrDolRx+AguJuSHezg=	ow0ZfSZnVCqFlPTcEXy4mmBSMNyLpLla	4096	\N	\N	User Four	\N	001590673258800	001590673258800
 \.
 
 

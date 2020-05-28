@@ -35,13 +35,21 @@ Openfire is configured with the following hostnames/XMPP domain names:
 * `xmpp1.localhost.example`
 * `xmpp2.localhost.example`
 
-Each Openfire has the following users:
+XMPP 1 has the following users:
 * `user1` `password`
 * `user2` `password`
 
 XMPP 1 hosts the following MUC rooms:
 * `muc1`
 * `muc2`
+
+XMPP 2 has the following users:
+* `user3` `password`
+* `user4` `password`
+
+XMPP 2 hosts the following MUC rooms:
+* `muc3`
+* `muc4`
 
 ## Network
 The Docker compose file defines a custom bridge network with a single subnet `172.50.0.0/24`.
