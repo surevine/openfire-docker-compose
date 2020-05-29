@@ -11,8 +11,8 @@ Running `./start.sh` will perform some cleanup then start the containers. When r
                    +---------------------------------------------+
                    |      172.50.0.10           172.50.0.20      |
                    |      +--------+            +--------+       |
-                   |      |        |            |        |       |
-(XMPP-C2S)   5221 -|------| XMPP 1 +============+ XMPP 2 |-------|- 5222 (XMPP-C2S)
+(XMPP-C2S)   5221 -|      |        |            |        |       |- 5222 (XMPP-C2S)
+(XMPP-S2S)   5261 -|------| XMPP 1 +============+ XMPP 2 |-------|- 5262 (XMPP-S2S)
 (HTTP-Admin) 9091 -|      |        |            |        |       |- 9092 (HTTP-Admin)
                    |      +----+---+            +----+---+       |
                    |           |                     |           |
