@@ -32,7 +32,7 @@ services:
       - "5221:5222"
       - "9091:9090"
     depends_on:
-      - "db2"
+      - "db1"
     volumes:
       - ./_data/xmpp/1/conf:/var/lib/openfire/conf
     networks:
