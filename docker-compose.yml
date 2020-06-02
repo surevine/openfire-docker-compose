@@ -30,6 +30,7 @@ services:
     image: openfire:fmuc
     ports:
       - "5221:5222"
+      - "5261:5269"
       - "9091:9090"
     depends_on:
       - "db2"
@@ -48,6 +49,7 @@ services:
     image: openfire:fmuc
     ports:
       - "5222:5222"
+      - "5262:5269"
       - "9092:9090"
     depends_on:
       - "db2"
