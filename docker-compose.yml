@@ -35,9 +35,11 @@ services:
       - "7441:7443"
       - "9091:9090"
     depends_on:
-      - "db2"
+      - "db1"
     volumes:
       - ./_data/xmpp/1/conf:/var/lib/openfire/conf
+      - ./wait-for-it.sh:/wait-for-it.sh
+    command: ["/wait-for-it.sh", "db1:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       net-one:
         ipv4_address: 172.50.0.10
@@ -59,6 +61,8 @@ services:
       - "db2"
     volumes:
       - ./_data/xmpp/2/conf:/var/lib/openfire/conf
+      - ./wait-for-it.sh:/wait-for-it.sh
+    command: ["/wait-for-it.sh", "db2:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       net-one:
         ipv4_address: 172.50.0.20
