@@ -175,7 +175,11 @@ CREATE TABLE public.ofmucroom (
     usereservednick integer NOT NULL,
     canchangenick integer NOT NULL,
     canregister integer NOT NULL,
-    allowpm integer
+    allowpm integer,
+    fmucEnabled integer,
+    fmucOutboundNode text,
+    fmucOutboundMode integer,
+    fmucInboundNodes text
 );
 
 
@@ -647,9 +651,9 @@ COPY public.ofmucmember (roomid, jid, nickname, firstname, lastname, url, email,
 -- Data for Name: ofmucroom; Type: TABLE DATA; Schema: public; Owner: openfire
 --
 
-COPY public.ofmucroom (serviceid, roomid, creationdate, modificationdate, name, naturalname, description, lockeddate, emptydate, canchangesubject, maxusers, publicroom, moderated, membersonly, caninvite, roompassword, candiscoverjid, logenabled, subject, rolestobroadcast, usereservednick, canchangenick, canregister, allowpm) FROM stdin;
-1	1	001590673127997	001590673128025	muc1	MUC One	First MUC room	000000000000000	001590673127997	0	30	1	0	0	0	\N	0	1		7	0	1	1	0
-1	2	001590673151895	001590673151897	muc2	MUC Two	Second MUC room	000000000000000	001590673151895	0	30	1	0	0	0	\N	0	1		7	0	1	1	0
+COPY public.ofmucroom (serviceid, roomid, creationdate, modificationdate, name, naturalname, description, lockeddate, emptydate, canchangesubject, maxusers, publicroom, moderated, membersonly, caninvite, roompassword, candiscoverjid, logenabled, subject, rolestobroadcast, usereservednick, canchangenick, canregister, allowpm, fmucEnabled, fmucOutboundNode, fmucOutboundMode, fmucInboundNodes) FROM stdin;
+1	1	001590673127997	001590673128025	muc1	MUC One	First MUC room	000000000000000	001590673127997	0	30	1	0	0	0	\N	0	1		7	0	1	1	0	0	\N	\N	\N
+1	2	001590673151895	001590673151897	muc2	MUC Two	Second MUC room	000000000000000	001590673151895	0	30	1	0	0	0	\N	0	1		7	0	1	1	0	0	\N	\N	\N
 \.
 
 
