@@ -147,11 +147,11 @@ Create directories for the exported DB and config:
 
 Export the database:
 
-    docker exec -t openfire-testing_db1_1 pg_dump -U openfire openfire > ./sql/3/openfire.sql
+    docker exec -t openfire-testing_db3_1 pg_dump -U openfire openfire > ./sql/3/openfire.sql
 
 Export the Openfire configuration:
 
-    docker cp openfire-testing_xmpp1_1:/var/lib/openfire/conf ./xmpp/3/
+    docker cp openfire-testing_xmpp3_1:/var/lib/openfire/conf ./xmpp/3/
 
 
 Add the new node to the main `docker-compose.yml` including the volume definitions to pull in your exported base 
@@ -167,7 +167,7 @@ db3:
     - "POSTGRES_USER=openfire"
     - "POSTGRES_PASSWORD=hunter2"
   volumes:
-    - ./sql/2:/docker-entrypoint-initdb.d
+    - ./sql/3:/docker-entrypoint-initdb.d
   networks:
     net-one:
       ipv4_address: 172.50.0.31
@@ -180,7 +180,7 @@ xmpp3:
   depends_on:
     - "db3"
   volumes:
-    - ./_data/xmpp/1/conf:/var/lib/openfire/conf
+    - ./_data/xmpp/3/conf:/var/lib/openfire/conf
   networks:
     net-one:
       ipv4_address: 172.50.0.30
