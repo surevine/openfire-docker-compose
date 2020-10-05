@@ -739,7 +739,7 @@ COPY public.ofpubsubaffiliation (serviceid, nodeid, jid, affiliation) FROM stdin
 --
 
 COPY public.ofpubsubdefaultconf (serviceid, leaf, deliverpayloads, maxpayloadsize, persistitems, maxitems, notifyconfigchanges, notifydelete, notifyretract, presencebased, senditemsubscribe, publishermodel, subscriptionenabled, accessmodel, language, replypolicy, associationpolicy, maxleafnodes) FROM stdin;
-pubsub	1	1	5120	0	1	1	1	1	0	1	publishers	1	open	English	\N	all	-1
+pubsub	1	1	10485760	0	1	1	1	1	0	1	publishers	1	open	English	\N	all	-1
 pubsub	0	0	0	0	0	1	1	1	0	0	publishers	1	open	English	\N	all	-1
 \.
 
@@ -869,7 +869,7 @@ COPY public.ofvcard (username, vcard) FROM stdin;
 --
 
 COPY public.ofversion (name, version) FROM stdin;
-openfire	30
+openfire	32
 \.
 
 
