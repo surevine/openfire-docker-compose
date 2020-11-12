@@ -61,7 +61,7 @@ To remove a node from the network run the following command:
 
 For example:
 
-    docker network disconnect openfire-testing_net-one openfire-testing_xmpp1_1
+    docker network disconnect openfire-testing_openfire-federated-net openfire-testing_xmpp1_1
 
 ### Adding a node to the network
 
@@ -71,7 +71,7 @@ To add a node to the network fun the following command:
 
 For example:
 
-    docker network connect openfire-testing_net-one openfire-testing_xmpp1_1
+    docker network connect openfire-testing_openfire-federated-net openfire-testing_xmpp1_1
 
 ## How it's built
 To recreate the known good state for the system we first create base Openfire and Postgres containers.
@@ -111,7 +111,7 @@ db3:
     - "POSTGRES_USER=openfire"
     - "POSTGRES_PASSWORD=hunter2"
   networks:
-    net-one:
+    openfire-federated-net:
       ipv4_address: 172.50.0.31
 
 xmpp3:
@@ -122,11 +122,11 @@ xmpp3:
   depends_on:
     - "db3"
   networks:
-    net-one:
+    openfire-federated-net:
       ipv4_address: 172.50.0.30
 
 networks:
-  net-one:
+  openfire-federated-net:
     driver: bridge
     ipam:
       driver: default
@@ -154,7 +154,7 @@ Export the Openfire configuration:
     docker cp openfire-testing_xmpp3_1:/var/lib/openfire/conf ./xmpp/3/
 
 
-Add the new node to the main `docker-compose.yml` including the volume definitions to pull in your exported base 
+Add the new node to the main `docker-compose-federated.yml` including the volume definitions to pull in your exported base 
 configuration data:
 
 ```
@@ -169,7 +169,7 @@ db3:
   volumes:
     - ./sql/3:/docker-entrypoint-initdb.d
   networks:
-    net-one:
+    openfire-federated-net:
       ipv4_address: 172.50.0.31
 
 xmpp3:
@@ -182,9 +182,17 @@ xmpp3:
   volumes:
     - ./_data/xmpp/3/conf:/var/lib/openfire/conf
   networks:
-    net-one:
+    openfire-federated-net:
       ipv4_address: 172.50.0.30
 
 ...
 
+```
+## Clustered setup
+
+The default setup described above creates a federated system. To create a clustered system use 
+the `docker-compose-clustered.yml` compose file or supply the `-c` flag to `start.sh`:
+
+```
+./run.sh -c
 ```
