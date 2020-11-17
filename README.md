@@ -3,7 +3,7 @@ This sets up multiple Openfire servers with associated PostgreSQL DBs in Docker 
 
 It relies on an official Postgres Docker image (from Docker Hub) and a local Openfire image, these are referred to in `docker-compose.yml`. The Openfire Docker image can be built using the `Dockerfile` in the root of the Openfire repository (https://github.com/igniterealtime/Openfire):
 
-    docker build -t openfire:fmuc .
+    docker build -t openfire:latest .
 
 Running `./start.sh` will perform some cleanup then start the containers. When running, the system looks like this:
 
@@ -115,7 +115,7 @@ db3:
       ipv4_address: 172.50.0.31
 
 xmpp3:
-  image: openfire:fmuc
+  image: openfire:latest
   ports:
     - "5223:5222"
     - "9093:9090"
@@ -173,7 +173,7 @@ db3:
       ipv4_address: 172.50.0.31
 
 xmpp3:
-  image: openfire:fmuc
+  image: openfire:latest
   ports:
     - "5223:5222"
     - "9093:9090"
