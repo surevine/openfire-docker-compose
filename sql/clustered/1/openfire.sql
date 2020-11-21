@@ -799,6 +799,12 @@ COPY public.ofremoteserverconf (xmppdomain, remoteport, permission) FROM stdin;
 --
 
 COPY public.ofroster (rosterid, username, jid, sub, ask, recv, nick) FROM stdin;
+1	user3	user1@xmpp.localhost.example	3	-1	-1	user1
+2	user1	user3@xmpp.localhost.example	3	-1	-1	user3
+3	user2	user1@xmpp.localhost.example	3	-1	-1	user1
+4	user1	user2@xmpp.localhost.example	3	-1	-1	user2
+5	user2	user3@xmpp.localhost.example	3	-1	-1	user3
+6	user3	user2@xmpp.localhost.example	3	-1	-1	user2
 \.
 
 
@@ -807,6 +813,12 @@ COPY public.ofroster (rosterid, username, jid, sub, ask, recv, nick) FROM stdin;
 --
 
 COPY public.ofrostergroups (rosterid, rank, groupname) FROM stdin;
+1	0	Friends
+2	0	Friends
+3	0	Friends
+4	0	Friends
+5	0	Friends
+6	0	Friends
 \.
 
 
