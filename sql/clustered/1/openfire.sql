@@ -615,7 +615,7 @@ COPY public.ofid (idtype, id) FROM stdin;
 26	2
 23	6
 27	51
-25	7
+25	9
 \.
 
 
@@ -721,8 +721,9 @@ provider.group.className	org.jivesoftware.openfire.group.DefaultGroupProvider	0	
 provider.vcard.className	org.jivesoftware.openfire.vcard.DefaultVCardProvider	0	\N
 provider.securityAudit.className	org.jivesoftware.openfire.security.DefaultSecurityAuditProvider	0	\N
 provider.user.className	org.jivesoftware.openfire.user.DefaultUserProvider	0	\N
-update.lastCheck	1605193114947	0	\N
 passwordKey	YJ1nKWyrMeGvTKu	0	\N
+log.debug.enabled	true	0	\N
+update.lastCheck	1605956807055	0	\N
 \.
 
 
@@ -799,6 +800,12 @@ COPY public.ofremoteserverconf (xmppdomain, remoteport, permission) FROM stdin;
 --
 
 COPY public.ofroster (rosterid, username, jid, sub, ask, recv, nick) FROM stdin;
+1	user3	user1@xmpp.localhost.example	3	-1	-1	user1
+2	user1	user3@xmpp.localhost.example	3	-1	-1	user3
+3	user2	user1@xmpp.localhost.example	3	-1	-1	user1
+4	user1	user2@xmpp.localhost.example	3	-1	-1	user2
+5	user2	user3@xmpp.localhost.example	3	-1	-1	user3
+6	user3	user2@xmpp.localhost.example	3	-1	-1	user2
 \.
 
 
@@ -807,6 +814,12 @@ COPY public.ofroster (rosterid, username, jid, sub, ask, recv, nick) FROM stdin;
 --
 
 COPY public.ofrostergroups (rosterid, rank, groupname) FROM stdin;
+1	0	Friends
+2	0	Friends
+3	0	Friends
+4	0	Friends
+5	0	Friends
+6	0	Friends
 \.
 
 
@@ -829,6 +842,7 @@ COPY public.ofsecurityauditlog (msgid, username, entrystamp, summary, node, deta
 4	admin	1605193178661	created new user user2	xmpp1.localhost.example	name = User Two, email = null, admin = false
 5	admin	1605193216992	created new MUC room muc1	xmpp1.localhost.example	subject = \nroomdesc = First MUC room\nroomname = MUC One\nmaxusers = 30
 6	admin	1605193235018	created new MUC room muc2	xmpp1.localhost.example	subject = \nroomdesc = Second MUC room\nroomname = MUC Two\nmaxusers = 30
+7	admin	1605957429200	created new user user3	xmpp2.localhost.example	name = null, email = null, admin = false
 \.
 
 
@@ -840,6 +854,7 @@ COPY public.ofuser (username, storedkey, serverkey, salt, iterations, plainpassw
 admin	\N	\N	\N	\N	admin	\N	Administrator	admin@example.com	0              	0              
 user1	bwwYjdvCySlDbPP8ThRhIRPNIsg=	kghyw1bnKARQIQFnq1ro4EeC24s=	2q5Haus5PeiKO6T0U7BWPW6p+6B2xNPv	4096	\N	d8835ca5c85385d31b06e30d0479559f241d3c6c9bfe37b5a2ee228a258a73b8	User One	\N	001605193167159	001605193167159
 user2	qQZJ/YRNwP4ongfV375LPUlDkeE=	t0pnVWMK/9MAEBGYka0bNJfYe/Q=	nl9R20qgvMHcet0lZVPFuzH0gVs32naO	4096	\N	58af7cf2b2717559f2d4a8b642257fbbb5f60763989294d1698e647b332d8ca7	User Two	\N	001605193178643	001605193178643
+user3	+03PBnVHvhdMSRRT5QBvcKkEzQE=	75I3lmGj2CYHQhKd76wrXltXqBA=	LDmgafUpzJd2N2RlYH8S8Rd/wXDM/h4w	4096	\N	03ffc319cac75a3da02777e376f09e4a13fe7d654cdc291a7a55f3792738d65c	User Three	\N	001605957429153	001605957429153
 \.
 
 
