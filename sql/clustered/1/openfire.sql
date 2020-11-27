@@ -723,6 +723,7 @@ provider.securityAudit.className	org.jivesoftware.openfire.security.DefaultSecur
 provider.user.className	org.jivesoftware.openfire.user.DefaultUserProvider	0	\N
 update.lastCheck	1605193114947	0	\N
 passwordKey	YJ1nKWyrMeGvTKu	0	\N
+log.debug.enabled	true	0	\N
 \.
 
 
