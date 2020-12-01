@@ -69,12 +69,20 @@ When running, the system looks like this:
 
 ```
                    +---------------------------------------------+
+                   |           172.60.0.99                       |
+                   |       +----------------+                    |
+                   |       |                |                    |
+(XMPP-C2S)  55222 -|-------|  Load Balancer |+-------+           |
+(BOSH)      57070 -|       |                |        |           |
+(BOSHS)     57443 -|       +----------------+        |           |
+                   |           |                     |           |
+                   |           |                     |           |
                    |      172.60.0.10           172.60.0.20      |
                    |      +--------+            +--------+       |
 (XMPP-C2S)   5221 -|      |        |            |        |       |- 5222 (XMPP-C2S)
 (XMPP-S2S)   5261 -|------| XMPP 1 +============+ XMPP 2 |-------|- 5262 (XMPP-S2S)
 (HTTP-Admin) 9091 -|      |        |            |        |       |- 9092 (HTTP-Admin)
-                   |      +----+---+            +----+---+       |
+(BOSH)       7071 -|      +----+---+            +----+---+       |- 7072 (BOSH)
                    |           |                     |           |
                    |           |                     |           |
                    |       +---+--+                  |           |
@@ -87,7 +95,7 @@ When running, the system looks like this:
                    +----------------172.60.0.0/24----------------+
 ```
 
-Note that there is no load balancer configured in the setup. 
+Note that the load balancer is intentionally configured to be "flappy" to simulate simple round-robin DNS load balancing, but that ports from individual servers are exposed and can be hit directly.
 
 Openfire is configured with the following XMPP domain:
 * `xmpp.localhost.example`
