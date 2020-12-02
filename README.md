@@ -1,25 +1,29 @@
 # Multiple Openfires in Docker
+
 Quickly create multiple Openfire servers with associated PostgreSQL DBs in Docker containers for local testing.
 
-Data and config snapshots have been taken of each DB and Openfire server so that a known desired state is configured on start. 
+Data and config snapshots have been taken of each DB and Openfire server so that a known desired state is configured on start.
 See the "How it's built" section below if you want to understand how this was done or need to add more nodes.
 
-# Prerequisites
-* Docker - https://docs.docker.com/engine/install/
-* Docker Compose - https://docs.docker.com/compose/install/
+## Prerequisites
+
+* Docker - <https://docs.docker.com/engine/install/>
+* Docker Compose - <https://docs.docker.com/compose/install/>
 
     docker build -t openfire:latest .
 
-# Quick Start
+## Quick Start
+
 1. Make sure you have docker and docker-compose installed
 2. Create a local Openfire docker image, tagged `openfire:latest` that contains the version of Openfire that you want to run
-    1. run `docker build -tag openfire:latest .` in the root of the Openfire repository (https://github.com/igniterealtime/Openfire)
+    1. run `docker build -tag openfire:latest .` in the root of the Openfire repository (<https://github.com/igniterealtime/Openfire>)
 3. Launch the environment
-    1. use `./start.sh` if you want two **federated** Openfire instances, or 
+    1. use `./start.sh` if you want two **federated** Openfire instances, or
     2. use `./start.sh -c` if you want two **clustered** Openfire instances.
 
-# Federated configuration
-Running `./start.sh` will perform some cleanup then start the containers in a federated configuration. 
+## Federated configuration
+
+Running `./start.sh` will perform some cleanup then start the containers in a federated configuration.
 When running, the system looks like this:
 
 ```
@@ -34,7 +38,7 @@ When running, the system looks like this:
                    |           |                     |           |
                    |       +---+--+               +--+---+       |
                    |       |      |               |      |       |
-(Database)   5431 -|-------| DB 1 |               | DB 2 |-------|- 5432 (Database) 
+(Database)   5431 -|-------| DB 1 |               | DB 2 |-------|- 5432 (Database)
                    |       |      |               |      |       |
                    |       +------+               +------+       |
                    |      172.50.0.11            172.50.0.21     |
@@ -43,38 +47,51 @@ When running, the system looks like this:
 ```
 
 Openfire is configured with the following hostnames/XMPP domain names:
+
 * `xmpp1.localhost.example`
 * `xmpp2.localhost.example`
 
 XMPP 1 has the following users:
+
 * `user1` `password`
 * `user2` `password`
 
 XMPP 1 hosts the following MUC rooms:
+
 * `muc1`
 * `muc2`
 
 XMPP 2 has the following users:
+
 * `user3` `password`
 * `user4` `password`
 
 XMPP 2 hosts the following MUC rooms:
+
 * `muc3`
 * `muc4`
 
+## Clustered configuration
 
-# Clustered configuration
-Running `./start.sh -c` will perform some cleanup then start the containers in a clustered configuration. 
+Running `./start.sh -c` will perform some cleanup then start the containers in a clustered configuration.
 When running, the system looks like this:
 
 ```
                    +---------------------------------------------+
+                   |           172.60.0.99                       |
+                   |       +----------------+                    |
+                   |       |                |                    |
+(XMPP-C2S)  55222 -|-------|  Load Balancer |+-------+           |
+(BOSH)      57070 -|       |                |        |           |
+(BOSHS)     57443 -|       +----------------+        |           |
+                   |           |                     |           |
+                   |           |                     |           |
                    |      172.60.0.10           172.60.0.20      |
                    |      +--------+            +--------+       |
 (XMPP-C2S)   5221 -|      |        |            |        |       |- 5222 (XMPP-C2S)
 (XMPP-S2S)   5261 -|------| XMPP 1 +============+ XMPP 2 |-------|- 5262 (XMPP-S2S)
 (HTTP-Admin) 9091 -|      |        |            |        |       |- 9092 (HTTP-Admin)
-                   |      +----+---+            +----+---+       |
+(BOSH)       7071 -|      +----+---+            +----+---+       |- 7072 (BOSH)
                    |           |                     |           |
                    |           |                     |           |
                    |       +---+--+                  |           |
@@ -87,56 +104,64 @@ When running, the system looks like this:
                    +----------------172.60.0.0/24----------------+
 ```
 
-Note that there is no load balancer configured in the setup. 
+Note that the load balancer is intentionally configured to be "flappy" to simulate simple round-robin DNS load balancing, but that ports from individual servers are exposed and can be hit directly.
 
 Openfire is configured with the following XMPP domain:
+
 * `xmpp.localhost.example`
 
 Openfire is configured with the following hostnames:
+
 * `xmpp1.localhost.example`
 * `xmpp2.localhost.example`
 
 The following users are configured:
+
 * `user1` `password`
 * `user2` `password`
 
 The following MUC rooms are configured:
+
 * `muc1`
 * `muc2`
 
+## Network
 
-# Network
-The Docker compose file defines a custom bridge network with a single subnet (`172.50.0.0/24` for the federated 
+The Docker compose file defines a custom bridge network with a single subnet (`172.50.0.0/24` for the federated
 configuration and `172.60.0.0/24` for the clustered).
 
-## Removing a node from the network
+### Removing a node from the network
+
 To remove a node from the network run the following command:
 
-    docker network disconnect NETWORK-NAME CONTAINER-NAME
+`docker network disconnect NETWORK-NAME CONTAINER-NAME`
 
 For example:
 
-    docker network disconnect openfire-testing_openfire-federated-net openfire-testing_xmpp1_1
+`docker network disconnect openfire-testing_openfire-federated-net openfire-testing_xmpp1_1`
 
-## Adding a node to the network
+### Adding a node to the network
+
 To add a node to the network fun the following command:
 
-    docker network connect NETWORK-NAME CONTAINER-NAME
+`docker network connect NETWORK-NAME CONTAINER-NAME`
 
 For example:
 
-    docker network connect openfire-testing_openfire-federated-net openfire-testing_xmpp1_1
+`docker network connect openfire-testing_openfire-federated-net openfire-testing_xmpp1_1`
 
+## How it's built
 
-# How it's built
 To recreate the known good state for the system we first create base Openfire and Postgres containers.
-We then perform the manual setup and any other configuration that we require, such as adding users and MUC rooms. 
-Once the setup is complete we dump the database from the container to the Docker host and copy the Openfire config 
-files from the container to the Docker host. These are then used with Docker volumes for creating the same state in 
+We then perform the manual setup and any other configuration that we require, such as adding users and MUC rooms.
+Once the setup is complete we dump the database from the container to the Docker host and copy the Openfire config
+files from the container to the Docker host. These are then used with Docker volumes for creating the same state in
 subsequent Openfire and Postgres containers.
 
-## Adding a new node
+### Adding a new node
+
 Configure a docker-compose file to stand up:
+
    1. a base Openfire container (named `xmpp3`)
    1. a base Postgres Docker container (named `db3`)
 
@@ -145,19 +170,21 @@ Be sure to set the correct IP addresses and increment the host port numbers so t
 The convention I have followed is to increment the IP addresses by 10 and the port numbers by 1:
 
 For `xmpp1`
-   * Openfire IP: `172.50.0.10`
-   * DB IP: `172.50.0.11`
-   * XMPP port: `5221`
-   * Admin port: `9091`
 
+* Openfire IP: `172.50.0.10`
+* DB IP: `172.50.0.11`
+* XMPP port: `5221`
+* Admin port: `9091`
 
 For `xmpp2`
-   * Openfire IP: `172.50.0.20`
-   * DB IP: `172.50.0.21`
-   * XMPP port: `5222`
-   * Admin port: `9092`
+
+* Openfire IP: `172.50.0.20`
+* DB IP: `172.50.0.21`
+* XMPP port: `5222`
+* Admin port: `9092`
 
 Example docker-compose file for our third node:
+
 ```
 db3:
   image: library/postgres:9.6.17-alpine
@@ -190,26 +217,27 @@ networks:
 ```
 
 Run this with `docker-compose up`. Once running navigate to `http://localhost:9093` and manually configure the Openfire server.
-The database hostname should be the name of the DB node in the compose file (so `db3` in this case). 
+The database hostname should be the name of the DB node in the compose file (so `db3` in this case).
 You should also get the database name, username, and password, from the compose file.
 
 Create any configuration you require (e.g. adding users).
 
 Create directories for the exported DB and config:
 
-    mkdir -p ./sql/3
-    mkdir -p ./xmpp/3  
+```
+mkdir -p ./sql/3
+mkdir -p ./xmpp/3  
+```
 
 Export the database:
 
-    docker exec -t openfire-testing_db3_1 pg_dump -U openfire openfire > ./sql/3/openfire.sql
+`docker exec -t openfire-testing_db3_1 pg_dump -U openfire openfire > ./sql/3/openfire.sql`
 
 Export the Openfire configuration:
 
-    docker cp openfire-testing_xmpp3_1:/var/lib/openfire/conf ./xmpp/3/
+`docker cp openfire-testing_xmpp3_1:/var/lib/openfire/conf ./xmpp/3/`
 
-
-Add the new node to the main `docker-compose-federated.yml` including the volume definitions to pull in your exported base 
+Add the new node to the main `docker-compose-federated.yml` including the volume definitions to pull in your exported base
 configuration data:
 
 ```
