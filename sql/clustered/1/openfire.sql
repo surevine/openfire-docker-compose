@@ -610,7 +610,7 @@ COPY public.ofgroupuser (groupname, username, administrator) FROM stdin;
 --
 
 COPY public.ofid (idtype, id) FROM stdin;
-18	1
+18	11
 19	1
 26	2
 23	6
