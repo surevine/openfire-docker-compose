@@ -31,7 +31,7 @@ services:
         ipv4_address: 172.50.0.21
 
   xmpp1:
-    image: openfire:latest
+    image: "openfire:${OPENFIRE_TAG}"
     ports:
       - "5221:5222"
       - "5261:5269"
@@ -54,7 +54,7 @@ services:
       - "conference.xmpp2.localhost.example:172.50.0.20"
 
   xmpp2:
-    image: openfire:latest
+    image: "openfire:${OPENFIRE_TAG}"
     ports:
       - "5222:5222"
       - "5262:5269"
