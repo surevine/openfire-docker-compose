@@ -40,7 +40,7 @@ services:
       - "db"
     volumes:
       - ./_data/xmpp/clustered/1/conf:/var/lib/openfire/conf
-      - ./_data/plugins/hazelcast.jar:/var/lib/openfire/plugins/hazelcast.jar
+      - ./_data/plugins:/opt/plugins
       - ./wait-for-it.sh:/wait-for-it.sh
     command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
     networks:
@@ -66,7 +66,7 @@ services:
       - "db"
     volumes:
       - ./_data/xmpp/clustered/2/conf:/var/lib/openfire/conf
-      - ./_data/plugins/hazelcast.jar:/var/lib/openfire/plugins/hazelcast.jar
+      - ./_data/plugins:/opt/plugins
       - ./wait-for-it.sh:/wait-for-it.sh
     command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
     networks:
@@ -92,7 +92,7 @@ services:
       - "db"
     volumes:
       - ./_data/xmpp/clustered/3/conf:/var/lib/openfire/conf
-      - ./_data/plugins/hazelcast.jar:/var/lib/openfire/plugins/hazelcast.jar
+      - ./_data/plugins:/opt/plugins
       - ./wait-for-it.sh:/wait-for-it.sh
     command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
     networks:
