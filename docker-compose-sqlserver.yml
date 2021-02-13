@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+        - "1433:1433"
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=SecurePa55w0rd
+        - OPENFIRE_DB_TAG
+    volumes:
+        - ./scripts/sqlserver:/scripts:ro
+        - ./sql/sqlserver:/tmp/openfiredb
+    entrypoint: [ "/bin/bash", "-c", "/scripts/run-and-import-data.sh" ]
+    networks:
+      openfire-sqlserver-net:
+        ipv4_address: 172.70.0.11
+
+  lb:
+    image: nginx:stable
+    ports:
+      - "55222:55222"
+      - "57070:57070"
+      - "57443:57443"
+    volumes:
+      - ./nginx/clustered/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      openfire-sqlserver-net:
+        ipv4_address: 172.70.0.99
+  
+  xmpp:
+    image: "openfire:${OPENFIRE_TAG}"
+    ports:
+      - "5222:5222"
+      - "5269:5269"
+      - "7070:7070"
+      - "7444:7443"
+      - "9090:9090"
+    depends_on:
+      - "db"
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh
+      - ./_data/xmpp/sqlserver/conf:/var/lib/openfire/conf
+    command: ["/wait-for-it.sh", "-t", "30", "-s", "db:1433", "--", "/sbin/entrypoint.sh"]
+    networks:
+      openfire-sqlserver-net:
+        ipv4_address: 172.70.0.10
+    extra_hosts:
+      - "xmpp.localhost.example:172.50.0.10"
+      - "conference.xmpp.localhost.example:172.50.0.10"
+
+networks:
+  openfire-sqlserver-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.70.0.0/24
