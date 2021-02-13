@@ -43,7 +43,7 @@ services:
     volumes:
       - ./_data/xmpp/federated/1/conf:/var/lib/openfire/conf
       - ./wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "db1:5432", "--", "/sbin/entrypoint.sh"]
+    command: ["/wait-for-it.sh", "-s", "db1:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       openfire-federated-net:
         ipv4_address: 172.50.0.10
@@ -66,7 +66,7 @@ services:
     volumes:
       - ./_data/xmpp/federated/2/conf:/var/lib/openfire/conf
       - ./wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "db2:5432", "--", "/sbin/entrypoint.sh"]
+    command: ["/wait-for-it.sh", "-s", "db2:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       openfire-federated-net:
         ipv4_address: 172.50.0.20
