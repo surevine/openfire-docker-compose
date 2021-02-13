@@ -11,7 +11,7 @@ services:
       - "POSTGRES_USER=openfire"
       - "POSTGRES_PASSWORD=hunter2"
     volumes:
-      - ./sql/clustered/1:/docker-entrypoint-initdb.d
+      - ./sql/clustered:/docker-entrypoint-initdb.d
     networks:
       openfire-clustered-net:
         ipv4_address: 172.60.0.11
