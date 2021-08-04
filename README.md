@@ -16,10 +16,10 @@ See the "How it's built" section below if you want to understand how this was do
 
 1. Make sure you have docker and docker-compose installed
 2. Create a local Openfire docker image, tagged `openfire:latest` that contains the version of Openfire that you want to run
-    1. run `docker build -tag openfire:latest .` in the root of the Openfire repository (<https://github.com/igniterealtime/Openfire>)
+    1. run `docker build --tag openfire:latest .` in the root of the Openfire repository (<https://github.com/igniterealtime/Openfire>)
 3. Launch the environment
     1. use `./start.sh` if you want two **federated** Openfire instances, or
-    2. use `./start.sh -c` if you want two **clustered** Openfire instances.
+    2. use `./start.sh -c` if you want three **clustered** Openfire instances.
 
 ## Federated configuration
 
@@ -77,31 +77,36 @@ Running `./start.sh -c` will perform some cleanup then start the containers in a
 When running, the system looks like this:
 
 ```
-                   +---------------------------------------------+
-                   |           172.60.0.99                       |
-                   |       +----------------+                    |
-                   |       |                |                    |
-(XMPP-C2S)  55222 -|-------|  Load Balancer |+-------+           |
-(BOSH)      57070 -|       |                |        |           |
-(BOSHS)     57443 -|       +----------------+        |           |
-                   |           |                     |           |
-                   |           |                     |           |
-                   |      172.60.0.10           172.60.0.20      |
-                   |      +--------+            +--------+       |
-(XMPP-C2S)   5221 -|      |        |            |        |       |- 5222 (XMPP-C2S)
-(XMPP-S2S)   5261 -|------| XMPP 1 +============+ XMPP 2 |-------|- 5262 (XMPP-S2S)
-(HTTP-Admin) 9091 -|      |        |            |        |       |- 9092 (HTTP-Admin)
-(BOSH)       7071 -|      +----+---+            +----+---+       |- 7072 (BOSH)
-                   |           |                     |           |
-                   |           |                     |           |
-                   |       +---+--+                  |           |
-                   |       |      |                  |           |
-(Database)   5432 -|-------|  DB  +------------------+           |
-                   |       |      |                              |
-                   |       +------+                              |
-                   |      172.60.0.11                            |
-                   |                                             |
-                   +----------------172.60.0.0/24----------------+
+                   +--------------------------------------------------+
+                   |           172.60.0.99                            |
+                   |       +----------------+                         |
+                   |       |                |+--------------+         |
+(XMPP-C2S)  55222 -|-------|  Load Balancer |+-------+      |         |
+(BOSH)      57070 -|       |                |        |      |         |
+(BOSHS)     57443 -|       +----------------+        |      |         |
+                   |           |                     |  172.60.0.30   |
+                   |           |                     |  +--------+    |
+                   |           |          +=============+        |    |- 5223 (XMPP-C2S)
+                   |           |          |          |  | XMPP 3 |----|- 5263 (XMPP-S2S)
+                   |           |          |          |  |        |    |- 9093 (HTTP-Admin)
+                   |           |          |          |  +------+-+    |- 7073 (BOSH)
+                   |           |          |          |         |      |
+                   |      172.60.0.10     |     172.60.0.20    |      |
+                   |      +--------+      |     +--------+     |      |
+(XMPP-C2S)   5221 -|      |        +======+     |        |=====+      |- 5222 (XMPP-C2S)
+(XMPP-S2S)   5261 -|------| XMPP 1 +============+ XMPP 2 |            |- 5262 (XMPP-S2S)
+(HTTP-Admin) 9091 -|      |        |            |        |------------|- 9092 (HTTP-Admin)
+(BOSH)       7071 -|      +----+---+            +----+---+            |- 7072 (BOSH)
+                   |           |                     |                |
+                   |           |                     |                |
+                   |       +---+--+                  |                |
+                   |       |      |                  |                |
+(Database)   5432 -|-------|  DB  +------------------+                |
+                   |       |      |                                   |
+                   |       +------+                                   |
+                   |      172.60.0.11                                 |
+                   |                                                  |
+                   +----------------172.60.0.0/24---------------------+
 ```
 
 Note that the load balancer is intentionally configured to be "flappy" to simulate simple round-robin DNS load balancing, but that ports from individual servers are exposed and can be hit directly.
@@ -114,6 +119,7 @@ Openfire is configured with the following hostnames:
 
 * `xmpp1.localhost.example`
 * `xmpp2.localhost.example`
+* `xmpp3.localhost.example`
 
 The following users are configured:
 
