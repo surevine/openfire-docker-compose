@@ -47,10 +47,12 @@ services:
       openfire-clustered-net:
         ipv4_address: 172.60.0.10
     extra_hosts:
-      - "xmpp1.localhost.example:172.50.0.10"
-      - "conference.xmpp1.localhost.example:172.50.0.10"
-      - "xmpp2.localhost.example:172.50.0.20"
-      - "conference.xmpp2.localhost.example:172.50.0.20"
+      - "xmpp1.localhost.example:172.60.0.10"
+      - "conference.xmpp1.localhost.example:172.60.0.10"
+      - "xmpp2.localhost.example:172.60.0.20"
+      - "conference.xmpp2.localhost.example:172.60.0.20"
+      - "xmpp3.localhost.example:172.60.0.30"
+      - "conference.xmpp3.localhost.example:172.60.0.30"
 
   xmpp2:
     image: "openfire:${OPENFIRE_TAG}"
@@ -71,10 +73,38 @@ services:
       openfire-clustered-net:
         ipv4_address: 172.60.0.20
     extra_hosts:
-      - "xmpp1.localhost.example:172.50.0.10"
-      - "conference.xmpp1.localhost.example:172.50.0.10"
-      - "xmpp2.localhost.example:172.50.0.20"
-      - "conference.xmpp2.localhost.example:172.50.0.20"
+      - "xmpp1.localhost.example:172.60.0.10"
+      - "conference.xmpp1.localhost.example:172.60.0.10"
+      - "xmpp2.localhost.example:172.60.0.20"
+      - "conference.xmpp2.localhost.example:172.60.0.20"
+      - "xmpp3.localhost.example:172.60.0.30"
+      - "conference.xmpp3.localhost.example:172.60.0.30"
+
+  xmpp3:
+    image: "openfire:${OPENFIRE_TAG}"
+    ports:
+      - "5223:5222"
+      - "5263:5269"
+      - "7073:7070"
+      - "7443:7443"
+      - "9093:9090"
+    depends_on:
+      - "db"
+    volumes:
+      - ./_data/xmpp/clustered/3/conf:/var/lib/openfire/conf
+      - ./_data/xmpp/clustered/3/plugins/hazelcast.jar:/var/lib/openfire/plugins/hazelcast.jar
+      - ./wait-for-it.sh:/wait-for-it.sh
+    command: ["/wait-for-it.sh", "db:5432", "--", "/sbin/entrypoint.sh"]
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.30
+    extra_hosts:
+      - "xmpp1.localhost.example:172.60.0.10"
+      - "conference.xmpp1.localhost.example:172.60.0.10"
+      - "xmpp2.localhost.example:172.60.0.20"
+      - "conference.xmpp2.localhost.example:172.60.0.20"
+      - "xmpp3.localhost.example:172.60.0.30"
+      - "conference.xmpp3.localhost.example:172.60.0.30"
 
 networks:
   openfire-clustered-net:
