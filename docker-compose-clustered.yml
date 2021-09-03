@@ -11,7 +11,7 @@ services:
       - "POSTGRES_USER=openfire"
       - "POSTGRES_PASSWORD=hunter2"
     volumes:
-      - ./sql/clustered/1:/docker-entrypoint-initdb.d
+      - ./sql/clustered:/docker-entrypoint-initdb.d
     networks:
       openfire-clustered-net:
         ipv4_address: 172.60.0.11
@@ -40,9 +40,9 @@ services:
       - "db"
     volumes:
       - ./_data/xmpp/clustered/1/conf:/var/lib/openfire/conf
-      - ./_data/xmpp/clustered/1/plugins/hazelcast.jar:/var/lib/openfire/plugins/hazelcast.jar
+      - ./_data/plugins/hazelcast.jar:/var/lib/openfire/plugins/hazelcast.jar
       - ./wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "db:5432", "--", "/sbin/entrypoint.sh"]
+    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       openfire-clustered-net:
         ipv4_address: 172.60.0.10
@@ -66,9 +66,9 @@ services:
       - "db"
     volumes:
       - ./_data/xmpp/clustered/2/conf:/var/lib/openfire/conf
-      - ./_data/xmpp/clustered/2/plugins/hazelcast.jar:/var/lib/openfire/plugins/hazelcast.jar
+      - ./_data/plugins/hazelcast.jar:/var/lib/openfire/plugins/hazelcast.jar
       - ./wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "db:5432", "--", "/sbin/entrypoint.sh"]
+    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       openfire-clustered-net:
         ipv4_address: 172.60.0.20
@@ -92,9 +92,9 @@ services:
       - "db"
     volumes:
       - ./_data/xmpp/clustered/3/conf:/var/lib/openfire/conf
-      - ./_data/xmpp/clustered/3/plugins/hazelcast.jar:/var/lib/openfire/plugins/hazelcast.jar
+      - ./_data/plugins/hazelcast.jar:/var/lib/openfire/plugins/hazelcast.jar
       - ./wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "db:5432", "--", "/sbin/entrypoint.sh"]
+    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       openfire-clustered-net:
         ipv4_address: 172.60.0.30
