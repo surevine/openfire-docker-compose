@@ -17,6 +17,7 @@ docker-compose -f $COMPOSE_FILE pull
 rm -rf _data
 mkdir _data
 cp -r xmpp _data/
+cp -r plugins _data/
 
 if [ -n "$1" ]; then
   echo "Using Openfire tag: $1"
