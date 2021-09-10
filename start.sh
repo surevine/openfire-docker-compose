@@ -1,17 +1,42 @@
-#!/bin/sh
+#!/bin/bash
 
-COMPOSE_FILE=docker-compose-federated.yml
+usage() { echo "Usage: $0 [-c] [-n openfire-tag] [-h]
 
-if [ "$1" = "-c" ]; then
-  echo "Starting a clustered environment."
-  COMPOSE_FILE=docker-compose-clustered.yml
-  shift
-else
-  echo "Starting a federated environment (use -c to start a clustered environment instead)."
-fi
+  -c               Launches a Cluster instead of a FMUC stack
+  -n openfire-tag  Launches all Openfire instances with the specified tag. This overrides the value in .env
+  -h               Show this helpful information
+"; exit 0; }
 
-docker-compose -f $COMPOSE_FILE down
-docker-compose -f $COMPOSE_FILE pull
+CLUSTER_MODE=false
+COMPOSE_FILE_COMMAND=("docker-compose")
+
+while getopts cn:h o; do
+  case "$o" in
+    c)
+        CLUSTER_MODE=true
+        ;;
+    n)
+        echo "Using Openfire tag: $1"
+        export OPENFIRE_TAG=$1
+        ;;
+    h)  
+        usage
+        ;;
+    *)
+        usage
+        ;;
+  esac
+done
+
+case $CLUSTER_MODE in
+  (true)   echo "Starting a clustered environment."
+           COMPOSE_FILE_COMMAND+=("-f" "docker-compose-clustered.yml");;
+  (false)  echo "Starting a federated environment (use -c to start a clustered environment instead)."
+           COMPOSE_FILE_COMMAND+=("-f" "docker-compose-federated.yml");;
+esac
+
+"${COMPOSE_FILE_COMMAND[@]}" down
+"${COMPOSE_FILE_COMMAND[@]}" pull
 
 # Clean up temporary persistence data
 rm -rf _data
@@ -19,8 +44,4 @@ mkdir _data
 cp -r xmpp _data/
 cp -r plugins _data/
 
-if [ -n "$1" ]; then
-  echo "Using Openfire tag: $1"
-  export OPENFIRE_TAG=$1
-fi
-docker-compose -f $COMPOSE_FILE up
+"${COMPOSE_FILE_COMMAND[@]}" up
