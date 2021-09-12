@@ -1,19 +1,24 @@
 #!/bin/bash
 
-usage() { echo "Usage: $0 [-c] [-n openfire-tag] [-h]
+usage() { echo "Usage: $0 [-c] [-o] [-n openfire-tag] [-h]
 
   -c               Launches a Cluster instead of a FMUC stack
+  -o               Launches another separate domain alongside the cluster
   -n openfire-tag  Launches all Openfire instances with the specified tag. This overrides the value in .env
   -h               Show this helpful information
 "; exit 0; }
 
 CLUSTER_MODE=false
+OTHER_DOMAIN=false
 COMPOSE_FILE_COMMAND=("docker-compose")
 
-while getopts cn:h o; do
+while getopts con:h o; do
   case "$o" in
     c)
         CLUSTER_MODE=true
+        ;;
+    o)
+        OTHER_DOMAIN=true
         ;;
     n)
         echo "Using Openfire tag: $1"
@@ -27,6 +32,15 @@ while getopts cn:h o; do
         ;;
   esac
 done
+
+if [ $OTHER_DOMAIN == "true" ]; then 
+  if [ $CLUSTER_MODE == "false" ]; then
+    echo "Other domains are only supported alongside clusters"
+    exit 1
+  else
+    COMPOSE_FILE_COMMAND+=("-f" "docker-compose-otherdomain.yml")
+  fi
+fi
 
 case $CLUSTER_MODE in
   (true)   echo "Starting a clustered environment."
