@@ -20,6 +20,7 @@ See the "How it's built" section below if you want to understand how this was do
 3. Launch the environment
     1. use `./start.sh` if you want two **federated** Openfire instances, or
     2. use `./start.sh -c` if you want three **clustered** Openfire instances.
+    3. use `./start.sh -co` if you want a combination: a cluster, with an additional federated Instance.
 
 ## Federated configuration
 
@@ -130,6 +131,51 @@ The following MUC rooms are configured:
 
 * `muc1`
 * `muc2`
+
+
+### Add a federated domain to the cluster
+
+Running `./start.sh -co` (instead of `./start.sh -c`) will, apart from the cluster described above, also instantiate a second XMPP domain that consists of one Openfire server. This will result in the following components to be added to the system as described above:
+
+```
+                   +------------------------+
+                   |       172.60.0.110     |
+                   |      +------------+    |
+(XMPP-C2S)   5229 -|      |            |    |
+(XMPP-S2S)   5269 -|------| OTHER XMPP |    |
+(HTTP-Admin) 9099 -|      |            |    |
+(BOSH)  7079/7449 -|      +------+-----+    |
+                   |             |          |
+                   |             |          |
+                   |       +-----+----+     |
+                   |       |          |     |
+(Database)   5433 -|-------| OTHER DB |     |
+                   |       |          |     |
+                   |       +----------+     |
+                   |       172.60.0.111     |
+                   |                        |
+                   +------172.60.0.0/24-----+
+```
+
+The additional Openfire is configured with the following XMPP domain:
+
+* `otherxmpp.localhost.example`
+
+Openfire is configured with the following hostname:
+
+* `otherxmpp.localhost.example`
+
+The following users are configured:
+
+* `user1` `password`
+* `user2` `password`
+
+The following MUC rooms are configured:
+
+* `muc1`
+* `muc2`
+
+Note that users and MUC rooms on the additional Openfire domain have a similar name to those on the cluster. This does not lead to collisions, as the domain-part of their JIDs will differ.
 
 ## Network
 
