@@ -21,8 +21,12 @@ while getopts con:h o; do
         OTHER_DOMAIN=true
         ;;
     n)
-        echo "Using Openfire tag: $1"
-        export OPENFIRE_TAG=$1
+        if [[ $OPTARG =~ " " ]]; then
+          echo "Docker tags cannot contain spaces"
+          exit 1
+        fi
+        echo "Using Openfire tag: $OPTARG"
+        export OPENFIRE_TAG="$OPTARG"
         ;;
     h)  
         usage
