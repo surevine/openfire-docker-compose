@@ -40,7 +40,7 @@ services:
       - "xmpp.localhost.example:172.60.0.30"
       - "conference.xmpp.localhost.example:172.60.0.10"
       - "conference.xmpp.localhost.example:172.60.0.20"
-      - "conference.xmpp3.localhost.example:172.60.0.30"
+      - "conference.xmpp.localhost.example:172.60.0.30"
       - "otherxmpp.localhost.example:172.60.0.110"
       - "conference.otherxmpp.localhost.example:172.60.0.110"
   
