@@ -28,7 +28,7 @@ services:
       - "otherdb"
     volumes:
       - ./_data/xmpp/otherdomain/conf:/var/lib/openfire/conf
-      #- ./_data/plugins:/opt/plugins
+      - ./_data/plugins_for_other:/opt/plugins
       - ./wait-for-it.sh:/wait-for-it.sh
     command: ["/wait-for-it.sh", "-s", "otherdb:5432", "--", "/sbin/entrypoint.sh"]
     networks:
