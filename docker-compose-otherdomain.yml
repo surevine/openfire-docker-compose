@@ -35,12 +35,8 @@ services:
       openfire-clustered-net:
         ipv4_address: 172.60.0.110
     extra_hosts:
-      - "xmpp.localhost.example:172.60.0.10"
-      - "xmpp.localhost.example:172.60.0.20"
-      - "xmpp.localhost.example:172.60.0.30"
-      - "conference.xmpp.localhost.example:172.60.0.10"
-      - "conference.xmpp.localhost.example:172.60.0.20"
-      - "conference.xmpp.localhost.example:172.60.0.30"
+      - "xmpp.localhost.example:172.60.0.99"
+      - "conference.xmpp.localhost.example:172.60.0.99"
       - "otherxmpp.localhost.example:172.60.0.110"
       - "conference.otherxmpp.localhost.example:172.60.0.110"
   
