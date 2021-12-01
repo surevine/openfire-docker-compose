@@ -722,7 +722,6 @@ provider.vcard.className	org.jivesoftware.openfire.vcard.DefaultVCardProvider	0	
 provider.securityAudit.className	org.jivesoftware.openfire.security.DefaultSecurityAuditProvider	0	\N
 provider.user.className	org.jivesoftware.openfire.user.DefaultUserProvider	0	\N
 passwordKey	YJ1nKWyrMeGvTKu	0	\N
-log.debug.enabled	true	0	\N
 update.lastCheck	1605956807055	0	\N
 \.
 
