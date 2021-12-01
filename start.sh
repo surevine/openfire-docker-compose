@@ -60,7 +60,8 @@ esac
 rm -rf _data
 mkdir _data
 cp -r xmpp _data/
-cp -r plugins _data/
+cp -r plugins_for_clustered _data/
+cp -r plugins_for_federated _data/
 cp -r plugins_for_other _data/
 
 "${COMPOSE_FILE_COMMAND[@]}" up
