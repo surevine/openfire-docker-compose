@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   db:
-    image: library/postgres:9.6.17-alpine
+    image: library/postgres:9.6.24-alpine
     ports:
       - "5432:5432"
     environment:

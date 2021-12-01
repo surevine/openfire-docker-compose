@@ -28,19 +28,15 @@ services:
       - "otherdb"
     volumes:
       - ./_data/xmpp/otherdomain/conf:/var/lib/openfire/conf
-      #- ./_data/plugins:/opt/plugins
+      - ./_data/plugins_for_other:/opt/plugins
       - ./wait-for-it.sh:/wait-for-it.sh
     command: ["/wait-for-it.sh", "-s", "otherdb:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       openfire-clustered-net:
         ipv4_address: 172.60.0.110
     extra_hosts:
-      - "xmpp.localhost.example:172.60.0.10"
-      - "xmpp.localhost.example:172.60.0.20"
-      - "xmpp.localhost.example:172.60.0.30"
-      - "conference.xmpp.localhost.example:172.60.0.10"
-      - "conference.xmpp.localhost.example:172.60.0.20"
-      - "conference.xmpp.localhost.example:172.60.0.30"
+      - "xmpp.localhost.example:172.60.0.99"
+      - "conference.xmpp.localhost.example:172.60.0.99"
       - "otherxmpp.localhost.example:172.60.0.110"
       - "conference.otherxmpp.localhost.example:172.60.0.110"
   
