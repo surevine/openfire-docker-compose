@@ -1,8 +1,10 @@
 #!/bin/bash
-docker exec -t openfire-docker-compose_xmpp1_1 cat /usr/local/openfire/logs/openfire.log > 1-openfire.log
-docker exec -t openfire-docker-compose_xmpp2_1 cat /usr/local/openfire/logs/openfire.log > 2-openfire.log
-docker exec -t openfire-docker-compose_xmpp3_1 cat /usr/local/openfire/logs/openfire.log > 3-openfire.log
-docker exec -t openfire-docker-compose_otherxmpp_1 cat /usr/local/openfire/logs/openfire.log > other-openfire.log
+CONTAINER_ONE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+xmpp1.1)
+CONTAINER_TWO=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+xmpp2.1)
+CONTAINER_THREE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+xmpp3.1)
+CONTAINER_OTHER=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+otherxmpp.1)
 
-#docker cp openfire-docker-compose_xmpp1_1:/usr/local/openfire/logs/all.log 1all.log
-#docker cp openfire-docker-compose_xmpp2_1:/usr/local/openfire/logs/all.log 2all.log
+[ -n "$CONTAINER_ONE" ] && docker exec -t "$CONTAINER_ONE" cat /usr/local/openfire/logs/openfire.log > 1-openfire.log
+[ -n "$CONTAINER_TWO" ] && docker exec -t "$CONTAINER_TWO" cat /usr/local/openfire/logs/openfire.log > 2-openfire.log
+[ -n "$CONTAINER_THREE" ] && docker exec -t "$CONTAINER_THREE" cat /usr/local/openfire/logs/openfire.log > 3-openfire.log
+[ -n "$CONTAINER_OTHER" ] && docker exec -t "$CONTAINER_OTHER" cat /usr/local/openfire/logs/openfire.log > other-openfire.log

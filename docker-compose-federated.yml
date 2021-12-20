@@ -42,6 +42,7 @@ services:
       - "db1"
     volumes:
       - ./_data/xmpp/federated/1/conf:/var/lib/openfire/conf
+      - ./_data/plugins_for_federated:/opt/plugins
       - ./wait-for-it.sh:/wait-for-it.sh
     command: ["/wait-for-it.sh", "-s", "db1:5432", "--", "/sbin/entrypoint.sh"]
     networks:
@@ -65,6 +66,7 @@ services:
       - "db2"
     volumes:
       - ./_data/xmpp/federated/2/conf:/var/lib/openfire/conf
+      - ./_data/plugins_for_federated:/opt/plugins
       - ./wait-for-it.sh:/wait-for-it.sh
     command: ["/wait-for-it.sh", "-s", "db2:5432", "--", "/sbin/entrypoint.sh"]
     networks:

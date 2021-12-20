@@ -4,7 +4,7 @@
 #Example usage: `./remove_node_from_cluster.sh 1` to remove node xmpp1
 
 NODE=$1
-CONTAINER_TO_REMOVE=openfire-docker-compose_xmpp"$NODE"_1
+CONTAINER_TO_REMOVE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+xmpp"$NODE".1)
 CONTAINER_NAME=pumba_node"$NODE"
 
 echo "About to be removed from cluster: $CONTAINER_TO_REMOVE"
@@ -17,6 +17,6 @@ docker run -d --rm \
     loss --percent 100 \
     "$CONTAINER_TO_REMOVE"
 
-sleep 1s
+sleep 1
 
 [[ $(docker ps --filter "name=$CONTAINER_NAME" --format '{{.Names}}') == "$CONTAINER_NAME" ]] || (echo "Failed to block traffic. The cluster likely needs restarting" && exit 1)
