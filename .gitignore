@@ -3,3 +3,4 @@ _data
 *.iml
 .DS_Store
 *.log
+peek.sql
