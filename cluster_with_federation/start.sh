@@ -1,0 +1,44 @@
+#!/bin/bash
+
+usage() { echo "Usage: $0 [-n openfire-tag] [-h]
+  -n openfire-tag  Launches all Openfire instances with the specified tag. This overrides the value in .env
+  -h               Show this helpful information
+"; exit 0; }
+
+PROJECT="openfire"
+COMPOSE_FILE_COMMAND=("docker-compose")
+COMPOSE_FILE_COMMAND+=("--env-file" "../_common/.env")
+COMPOSE_FILE_COMMAND+=("--project-name" "$PROJECT")
+
+while getopts n:h o; do
+  case "$o" in
+    n)
+        if [[ $OPTARG =~ " " ]]; then
+          echo "Docker tags cannot contain spaces"
+          exit 1
+        fi
+        echo "Using Openfire tag: $OPTARG"
+        export OPENFIRE_TAG="$OPTARG"
+        ;;
+    h)  
+        usage
+        ;;
+    *)
+        usage
+        ;;
+  esac
+done
+
+echo "Starting a clustered environment."
+COMPOSE_FILE_COMMAND+=("-f" "docker-compose-clustered.yml")
+
+"${COMPOSE_FILE_COMMAND[@]}" down
+"${COMPOSE_FILE_COMMAND[@]}" pull
+
+# Clean up temporary persistence data
+rm -rf _data
+mkdir _data
+cp -r xmpp _data/
+cp -r plugins _data/
+
+"${COMPOSE_FILE_COMMAND[@]}" up -d

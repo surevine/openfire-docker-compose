@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    This file stores bootstrap properties needed by Openfire.
+    Property names must be in the format: "prop.name.is.blah=value"
+    That will be stored as:
+        <prop>
+            <name>
+                <is>
+                    <blah>value</blah>
+                </is>
+            </name>
+        </prop>
+
+    Most properties are stored in the Openfire database. A
+    property viewer and editor is included in the admin console.
+-->
+<!-- root element, all properties must be under this element -->
+<jive> 
+  <adminConsole> 
+    <!-- Disable either port by setting the value to -1 -->  
+    <port>9090</port>  
+    <securePort>9091</securePort> 
+  </adminConsole>  
+  <locale>en</locale>  
+  <!-- Network settings. By default, Openfire will bind to all network interfaces.
+      Alternatively, you can specify a specific network interfaces that the server
+      will listen on. For example, 127.0.0.1. This setting is generally only useful
+       on multi-homed servers. -->  
+  <!--
+    <network>
+        <interface></interface>
+    </network>
+    -->  
+  <!--
+        One time token to gain temporary access to the admin console.
+    -->  
+  <!--
+    <oneTimeAccessToken>secretToken</oneTimeAccessToken>
+    -->  
+  <connectionProvider>
+    <className>org.jivesoftware.database.DefaultConnectionProvider</className>
+  </connectionProvider> 
+  <database>
+    <defaultProvider>
+      <driver>org.postgresql.Driver</driver> 
+      <serverURL>jdbc:postgresql://db:5432/openfire</serverURL> 
+      <username encrypted="true">10d847caed2654fbb1fe6cefac0f381893323ae6b5eea27d31503d5880091fca</username> 
+      <password encrypted="true">30c1893796e0110fc4607c8b1bca0d0e54f10b270c4615d3</password> 
+      <testSQL>select 1</testSQL> 
+      <testBeforeUse>false</testBeforeUse> 
+      <testAfterUse>false</testAfterUse> 
+      <testTimeout>500</testTimeout> 
+      <timeBetweenEvictionRuns>30000</timeBetweenEvictionRuns> 
+      <minIdleTime>900000</minIdleTime> 
+      <maxWaitTime>500</maxWaitTime> 
+      <minConnections>5</minConnections> 
+      <maxConnections>25</maxConnections> 
+      <connectionTimeout>1.0</connectionTimeout>
+    </defaultProvider>
+  </database> 
+  <setup>true</setup> 
+  <fqdn>xmpp3.localhost.example</fqdn>
+  <clustering>
+    <enabled>true</enabled>
+  </clustering>
+</jive>
