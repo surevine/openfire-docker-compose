@@ -33,10 +33,12 @@ echo "Starting a clustered environment."
 COMPOSE_FILE_COMMAND+=("-f" "docker-compose-clustered.yml")
 
 "${COMPOSE_FILE_COMMAND[@]}" down
-"${COMPOSE_FILE_COMMAND[@]}" pull
+"${COMPOSE_FILE_COMMAND[@]}" pull --ignore-pull-failures
 
 # Clean up temporary persistence data
-rm -rf _data
+if ! rm -rf _data; then 
+  echo "ERROR: Failed to delete _data directory. Try with sudo, then re-run." && exit 1
+fi
 mkdir _data
 cp -r xmpp _data/
 cp -r plugins _data/
