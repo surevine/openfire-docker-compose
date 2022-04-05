@@ -1,8 +1,8 @@
 #!/bin/bash
-CONTAINER_ONE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+xmpp1.1)
-CONTAINER_TWO=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+xmpp2.1)
-CONTAINER_THREE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+xmpp3.1)
-CONTAINER_OTHER=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+otherxmpp.1)
+CONTAINER_ONE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire.+xmpp1.1)
+CONTAINER_TWO=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire.+xmpp2.1)
+CONTAINER_THREE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire.+xmpp3.1)
+CONTAINER_OTHER=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire.+otherxmpp.1)
 
 [ -n "$CONTAINER_ONE" ] && docker exec -t "$CONTAINER_ONE" cat /usr/local/openfire/logs/openfire.log > 1-openfire.log
 [ -n "$CONTAINER_TWO" ] && docker exec -t "$CONTAINER_TWO" cat /usr/local/openfire/logs/openfire.log > 2-openfire.log

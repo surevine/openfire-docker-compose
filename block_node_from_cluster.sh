@@ -4,7 +4,7 @@
 #Example usage: `./remove_node_from_cluster.sh 1` to remove node xmpp1
 
 NODE=$1
-CONTAINER_TO_REMOVE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+xmpp"$NODE".1)
+CONTAINER_TO_REMOVE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire.+xmpp"$NODE".1)
 CONTAINER_NAME=pumba_node"$NODE"
 
 echo "About to be removed from cluster: $CONTAINER_TO_REMOVE"

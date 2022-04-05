@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONTAINER_TO_REMOVE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire-docker.+xmpp2.1)
+CONTAINER_TO_REMOVE=$(docker ps --filter status=running --format "{{.Names}}" | grep -E openfire.+xmpp2.1)
 CONTAINER_NAME=pumba_node2
 
 echo "About to be blocked from communication: $CONTAINER_TO_REMOVE"
