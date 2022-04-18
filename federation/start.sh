@@ -13,6 +13,8 @@ COMPOSE_FILE_COMMAND+=("--project-name" "$PROJECT")
 # Where is this script? It could be called from anywhere, so use this to get full paths.
 SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
 
+source "$SCRIPTPATH/../_common/functions.sh"
+
 while getopts n:h o; do
   case "$o" in
     n)
