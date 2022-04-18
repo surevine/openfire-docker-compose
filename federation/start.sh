@@ -39,7 +39,7 @@ COMPOSE_FILE_COMMAND+=("-f" "docker-compose-federated.yml")
 
 pushd "$SCRIPTPATH"
 
-"${COMPOSE_FILE_COMMAND[@]}" down
+"$SCRIPTPATH"/../stop.sh
 "${COMPOSE_FILE_COMMAND[@]}" pull --ignore-pull-failures
 
 # Clean up temporary persistence data
