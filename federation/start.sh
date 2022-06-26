@@ -6,7 +6,7 @@ usage() { echo "Usage: $0 [-n openfire-tag] [-h]
 "; exit 0; }
 
 PROJECT="openfire"
-COMPOSE_FILE_COMMAND=("docker-compose")
+COMPOSE_FILE_COMMAND=("docker" "compose")
 COMPOSE_FILE_COMMAND+=("--env-file" "../_common/.env")
 COMPOSE_FILE_COMMAND+=("--project-name" "$PROJECT")
 

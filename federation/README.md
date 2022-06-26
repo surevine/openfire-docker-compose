@@ -138,7 +138,7 @@ networks:
         - subnet: 172.50.0.0/24
 ```
 
-Run this with `docker-compose up`. Once running navigate to `http://localhost:9093` and manually configure the Openfire server.
+Run this with the `start.sh`. Once running navigate to `http://localhost:9093` and manually configure the Openfire server.
 The database hostname should be the name of the DB node in the compose file (so `db3` in this case).
 You should also get the database name, username, and password, from the compose file.
 
