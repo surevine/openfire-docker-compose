@@ -15,6 +15,8 @@ SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
 
 source "$SCRIPTPATH/../_common/functions.sh"
 
+check_deps
+
 while getopts n:h o; do
   case "$o" in
     n)
