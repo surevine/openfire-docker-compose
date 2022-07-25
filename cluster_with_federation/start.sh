@@ -49,6 +49,7 @@ fi
 mkdir _data
 cp -r xmpp _data/
 cp -r plugins _data/
+cp -r plugins_for_otherdomain _data/
 
 "${COMPOSE_FILE_COMMAND[@]}" up -d || popd
 popd
