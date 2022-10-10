@@ -723,6 +723,7 @@ provider.vcard.className	org.jivesoftware.openfire.vcard.DefaultVCardProvider	0	
 provider.securityAudit.className	org.jivesoftware.openfire.security.DefaultSecurityAuditProvider	0	\N
 provider.user.className	org.jivesoftware.openfire.user.DefaultUserProvider	0	\N
 update.lastCheck	1590673249731	0	\N
+xmpp.gateway.domains	xmpp1.localhost.example,xmpp3.localhost.example	0	\N
 \.
 
 
