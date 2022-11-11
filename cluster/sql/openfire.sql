@@ -723,6 +723,9 @@ provider.securityAudit.className	org.jivesoftware.openfire.security.DefaultSecur
 provider.user.className	org.jivesoftware.openfire.user.DefaultUserProvider	0	\N
 passwordKey	YJ1nKWyrMeGvTKu	0	\N
 update.lastCheck	1605956807055	0	\N
+plugin.httpfileupload.fileRepo	/mnt/shared-httpfileupload-repo	0	\N
+plugin.httpfileupload.announcedWebPort	57070	0	\N
+plugin.httpfileupload.announcedWebProtocol	http	0	\N
 \.
 
 

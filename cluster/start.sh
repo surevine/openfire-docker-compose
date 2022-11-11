@@ -51,6 +51,8 @@ fi
 mkdir _data
 cp -r xmpp _data/
 cp -r plugins _data/
+mkdir _data/shared-httpfileupload-repo
+chmod 777 _data/shared-httpfileupload-repo
 
 "${COMPOSE_FILE_COMMAND[@]}" up -d || popd
 popd

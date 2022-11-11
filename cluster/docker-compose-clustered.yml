@@ -42,6 +42,7 @@ services:
       - ./_data/xmpp/1/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
+      - ./_data/shared-httpfileupload-repo:/mnt/shared-httpfileupload-repo
     command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       openfire-clustered-net:
@@ -68,6 +69,7 @@ services:
       - ./_data/xmpp/2/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
+      - ./_data/shared-httpfileupload-repo:/mnt/shared-httpfileupload-repo
     command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       openfire-clustered-net:
@@ -94,6 +96,7 @@ services:
       - ./_data/xmpp/3/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
+      - ./_data/shared-httpfileupload-repo:/mnt/shared-httpfileupload-repo
     command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
     networks:
       openfire-clustered-net:
