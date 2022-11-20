@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker compose -p openfire down
+docker compose -p openfire down --volumes

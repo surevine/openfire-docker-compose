@@ -1,0 +1,176 @@
+version: '3.7'
+
+services:
+
+  db-1:
+    image: bitnami/mariadb-galera:10.9
+    ports:
+      - 3306
+      - 4444
+      - 4567
+      - 4568
+    environment:
+      - MARIADB_ROOT_PASSWORD=adminpassword
+      - MARIADB_USER=openfire
+      - MARIADB_PASSWORD=hunter2
+      - MARIADB_DATABASE=openfire
+      - MARIADB_GALERA_MARIABACKUP_PASSWORD=backuppassword
+      - MARIADB_GALERA_CLUSTER_BOOTSTRAP=yes
+      - MARIADB_GALERA_CLUSTER_NAME=galera
+      #- MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://172.60.0.11:4567,0.0.0.0:4567
+      #- MARIADB_GALERA_NODE_ADDRESS=172.60.0.11
+      - MARIADB_REPLICATION_USER=replica
+      - MARIADB_REPLICATION_PASSWORD=replicapassword
+      - MARIADB_EXTRA_FLAGS=--wsrep_provider_options=ist.recv_addr=172.60.0.11:4568;ist.recv_bind=0.0.0.0:4568 --wsrep_node_incoming_address=172.60.0.11 --wsrep_sst_receive_address=172.60.0.11
+    volumes:
+      - 'mariadb_galera_data_0:/bitnami/mariadb'
+    restart: always
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.11
+
+  db-2:
+    image: bitnami/mariadb-galera:10.9
+    ports:
+      - 3306
+      - 4444
+      - 4567
+      - 4568
+    entrypoint: ""
+    command:
+      - bash
+      - -ec
+      - |
+          # Wait 20 seconds to guarantee creation order
+          sleep 20
+          exec /opt/bitnami/scripts/mariadb-galera/entrypoint.sh /opt/bitnami/scripts/mariadb-galera/run.sh
+    environment:
+      - MARIADB_ROOT_PASSWORD=adminpassword
+      - MARIADB_GALERA_MARIABACKUP_PASSWORD=backuppassword
+      - MARIADB_GALERA_CLUSTER_NAME=galera
+      - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://172.60.0.11:4567
+      - MARIADB_REPLICATION_USER=replica
+      - MARIADB_REPLICATION_PASSWORD=replicapassword
+      - MARIADB_EXTRA_FLAGS=--wsrep_provider_options=ist.recv_addr=172.60.0.12:4568;ist.recv_bind=0.0.0.0:4568 --wsrep_node_incoming_address=172.60.0.12 --wsrep_sst_receive_address=172.60.0.12
+    volumes:
+      - 'mariadb_galera_data_1:/bitnami/mariadb'
+    restart: always
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.12
+
+  lb:
+    image: nginx:stable
+    ports:
+      - "55222:55222"
+      - "57070:57070"
+      - "57443:57443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.99
+  
+  xmpp1:
+    image: "openfire:${OPENFIRE_TAG}"
+    ports:
+      - "5221:5222"
+      - "5261:5269"
+      - "7071:7070"
+      - "7441:7443"
+      - "9091:9090"
+    depends_on:
+      - "db-1"
+    volumes:
+      - ./_data/xmpp/1/conf:/var/lib/openfire/conf
+      - ./_data/plugins:/opt/plugins
+      - ../_common/wait-for-it.sh:/wait-for-it.sh
+      - ./sql/openfire.sql:/usr/local/openfire/resources/database/openfire_mysql.sql
+    command: ["/wait-for-it.sh", "-t", "60", "-s", "db-1:3306", "--", "/sbin/entrypoint.sh"]
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.10
+    extra_hosts:
+      - "xmpp1.localhost.example:172.60.0.10"
+      - "conference.xmpp1.localhost.example:172.60.0.10"
+      - "xmpp2.localhost.example:172.60.0.20"
+      - "conference.xmpp2.localhost.example:172.60.0.20"
+      - "xmpp3.localhost.example:172.60.0.30"
+      - "conference.xmpp3.localhost.example:172.60.0.30"
+
+  xmpp2:
+    image: "openfire:${OPENFIRE_TAG}"
+    ports:
+      - "5222:5222"
+      - "5262:5269"
+      - "7072:7070"
+      - "7442:7443"
+      - "9092:9090"
+    depends_on:
+      - "db-1"
+      - "xmpp1"
+    volumes:
+      - ./_data/xmpp/2/conf:/var/lib/openfire/conf
+      - ./_data/plugins:/opt/plugins
+      - ../_common/wait-for-it.sh:/wait-for-it.sh
+      - ./sql/openfire.sql:/usr/local/openfire/resources/database/openfire_mysql.sql
+    command: ["/wait-for-it.sh", "-t", "60", "-s", "xmpp1:9090", "--", "/sbin/entrypoint.sh"]
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.20
+    extra_hosts:
+      - "xmpp1.localhost.example:172.60.0.10"
+      - "conference.xmpp1.localhost.example:172.60.0.10"
+      - "xmpp2.localhost.example:172.60.0.20"
+      - "conference.xmpp2.localhost.example:172.60.0.20"
+      - "xmpp3.localhost.example:172.60.0.30"
+      - "conference.xmpp3.localhost.example:172.60.0.30"
+
+  xmpp3:
+    image: "openfire:${OPENFIRE_TAG}"
+    ports:
+      - "5223:5222"
+      - "5263:5269"
+      - "7073:7070"
+      - "7443:7443"
+      - "9093:9090"
+    depends_on:
+      - "db-1"
+      - "xmpp2"
+    volumes:
+      - ./_data/xmpp/3/conf:/var/lib/openfire/conf
+      - ./_data/plugins:/opt/plugins
+      - ../_common/wait-for-it.sh:/wait-for-it.sh
+      - ./sql/openfire.sql:/usr/local/openfire/resources/database/openfire_mysql.sql
+    command: ["/wait-for-it.sh", "-t", "60", "-s", "xmpp1:9090", "--", "/sbin/entrypoint.sh"]
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.30
+    extra_hosts:
+      - "xmpp1.localhost.example:172.60.0.10"
+      - "conference.xmpp1.localhost.example:172.60.0.10"
+      - "xmpp2.localhost.example:172.60.0.20"
+      - "conference.xmpp2.localhost.example:172.60.0.20"
+      - "xmpp3.localhost.example:172.60.0.30"
+      - "conference.xmpp3.localhost.example:172.60.0.30"
+
+  dozzle:
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9999:8080
+
+volumes:
+  mariadb_galera_data_0:
+    driver: local
+  mariadb_galera_data_1:
+    driver: local
+
+networks:
+  openfire-clustered-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.60.0.0/24
