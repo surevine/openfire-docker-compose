@@ -64,4 +64,13 @@
   <clustering>
     <enabled>true</enabled>
   </clustering>
+  <plugin>
+    <httpfileupload>
+      <serverspecific>
+        <announcedWebProtocol>http</announcedWebProtocol>
+        <announcedWebHost>localhost</announcedWebHost>
+        <announcedWebPort>7073</announcedWebPort>
+      </serverspecific>
+    </httpfileupload>
+  </plugin>
 </jive>
