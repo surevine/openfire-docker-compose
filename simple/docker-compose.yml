@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   db:
-    image: library/postgres:9.6.24-alpine
+    image: postgres:14-alpine
     ports:
       - "5432:5432"
     environment:
@@ -27,8 +27,8 @@ services:
     depends_on:
       - "db"
     volumes:
-      - ./_data/xmpp/conf:/var/lib/openfire/conf
-      - ./_data/plugins:/opt/plugins
+      - ./_data/xmpp/conf:/data/conf
+      - ./_data/plugins:/data/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
     command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
     networks:
