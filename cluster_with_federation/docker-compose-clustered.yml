@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   db:
-    image: library/postgres:9.6.24-alpine
+    image: library/postgres:latest
     ports:
       - "5432:5432"
     environment:
@@ -113,7 +113,7 @@ services:
       - "conference.otherxmpp.localhost.example:172.60.0.110"
 
   otherdb:
-    image: library/postgres:9.6.24-alpine
+    image: library/postgres:latest
     ports:
       - "5433:5432"
     environment:

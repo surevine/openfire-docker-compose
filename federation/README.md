@@ -109,7 +109,7 @@ Example docker-compose file for our third node:
 
 ```
 db3:
-  image: library/postgres:9.6.24-alpine
+  image: library/postgres:latest
   environment:
     - "POSTGRES_DB=openfire"
     - "POSTGRES_USER=openfire"
@@ -166,7 +166,7 @@ configuration data:
 ...
 
 db3:
-  image: library/postgres:9.6.24-alpine
+  image: library/postgres:latest
   environment:
     - "POSTGRES_DB=openfire"
     - "POSTGRES_USER=openfire"
