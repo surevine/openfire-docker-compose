@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   db1:
-    image: library/postgres:9.6.24-alpine
+    image: library/postgres:latest
     ports:
       - "5431:5432"
     environment:
@@ -17,7 +17,7 @@ services:
         ipv4_address: 172.50.0.11
 
   db2:
-    image: library/postgres:9.6.24-alpine
+    image: library/postgres:latest
     ports:
       - "5432:5432"
     environment:
