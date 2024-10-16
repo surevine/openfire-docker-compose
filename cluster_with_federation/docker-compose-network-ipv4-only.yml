@@ -1,0 +1,76 @@
+services:
+
+  db:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.11
+
+  lb:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.99
+  
+  xmpp1:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.10
+    extra_hosts:
+      - "xmpp1.localhost.example=172.60.0.10"
+      - "conference.xmpp1.localhost.example=172.60.0.10"
+      - "xmpp2.localhost.example=172.60.0.20"
+      - "conference.xmpp2.localhost.example=172.60.0.20"
+      - "xmpp3.localhost.example=172.60.0.30"
+      - "conference.xmpp3.localhost.example=172.60.0.30"
+      - "otherxmpp.localhost.example=172.60.0.110"
+      - "conference.otherxmpp.localhost.example=172.60.0.110"
+
+  xmpp2:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.20
+    extra_hosts:
+      - "xmpp1.localhost.example=172.60.0.10"
+      - "conference.xmpp1.localhost.example=172.60.0.10"
+      - "xmpp2.localhost.example=172.60.0.20"
+      - "conference.xmpp2.localhost.example=172.60.0.20"
+      - "xmpp3.localhost.example=172.60.0.30"
+      - "conference.xmpp3.localhost.example=172.60.0.30"
+      - "otherxmpp.localhost.example=172.60.0.110"
+      - "conference.otherxmpp.localhost.example=172.60.0.110"
+
+  xmpp3:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.30
+    extra_hosts:
+      - "xmpp1.localhost.example=172.60.0.10"
+      - "conference.xmpp1.localhost.example=172.60.0.10"
+      - "xmpp2.localhost.example=172.60.0.20"
+      - "conference.xmpp2.localhost.example=172.60.0.20"
+      - "xmpp3.localhost.example=172.60.0.30"
+      - "conference.xmpp3.localhost.example=172.60.0.30"
+      - "otherxmpp.localhost.example=172.60.0.110"
+      - "conference.otherxmpp.localhost.example=172.60.0.110"
+
+  otherdb:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.111
+  
+  otherxmpp:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.110
+    extra_hosts:
+      - "xmpp.localhost.example=172.60.0.99"
+      - "conference.xmpp.localhost.example=172.60.0.99"
+      - "otherxmpp.localhost.example=172.60.0.110"
+      - "conference.otherxmpp.localhost.example=172.60.0.110"
+  
+networks:
+  openfire-clustered-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.60.0.0/24

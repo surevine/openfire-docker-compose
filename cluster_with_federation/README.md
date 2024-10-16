@@ -106,6 +106,76 @@ Note that users and MUC rooms on the additional Openfire domain have a similar n
 
 The Docker compose file defines a custom bridge network with a single subnet of `172.60.0.0/24` for the clustered configuration.
 
+When the `-6` argument to `./start.sh` is provided, then an additional subnet of `fd23:0d79:d076::/64` is configured.
+Then, IPv6 is preferred for internal networking. Note that the IPv4 network remains in place, as Docker does not support
+IPv6-only containers.
+
+When running with the optional `-6` flag (that adds IPv6 support) the system looks like this:
+
+```
+                   +--------------------------------------------------+
+                   |       [fd23:d79:d076::99]                        |
+                   |           172.60.0.99                            |
+                   |       +----------------+                         |
+                   |       |                |+--------------+         |
+(XMPP-C2S)  55222 -|-------|  Load Balancer |+-------+      |         |
+(BOSH)      57070 -|       |                |        |      |         |
+(BOSHS)     57443 -|       +----------------+        |      |         |
+                   |           |                     | [fd23:d79:d076::30]
+                   |           |                     |  172.60.0.30   |
+                   |           |                     |  +--------+    |
+                   |           |          +=============+        |    |- 5223 (XMPP-C2S)
+                   |           |          |          |  | XMPP 3 |----|- 5263 (XMPP-S2S)
+                   |           |          |          |  |        |    |- 9093 (HTTP-Admin)
+                   |           |          |          |  +------+-+    |- 7073 (BOSH)
+                   |           |          |          |         |      |
+                   |  [fd23:d79:d076::10] | [fd23:d79:d076::20]|      |
+                   |      172.60.0.10     |     172.60.0.20    |      |
+                   |      +--------+      |     +--------+     |      |
+(XMPP-C2S)   5221 -|      |        +======+     |        |=====+      |- 5222 (XMPP-C2S)
+(XMPP-S2S)   5261 -|------| XMPP 1 +============+ XMPP 2 |            |- 5262 (XMPP-S2S)
+(HTTP-Admin) 9091 -|      |        |            |        |------------|- 9092 (HTTP-Admin)
+(BOSH)       7071 -|      +----+---+            +----+---+            |- 7072 (BOSH)
+                   |           |                     |                |
+                   |           |                     |                |
+                   |       +---+--+                  |                |
+                   |       |      |                  |                |
+(Database)   5432 -|-------|  DB  +------------------+                |
+                   |       |      |                                   |
+                   |       +------+                                   |
+                   |      172.60.0.11                                 |
+                   |  [fd23:d79:d076::11]                             |
+                   |                                                  |
+                   +----------------172.60.0.0/24---------------------+
+                                 fd23:0d79:d076::/64
+```
+
+The federated domain, with IPv6 enabled, looks like this:
+
+```
+                   +------------------------+
+                   |  [fd23:d79:d076::110]  |
+                   |       172.60.0.110     |
+                   |      +------------+    |
+(XMPP-C2S)   5229 -|      |            |    |
+(XMPP-S2S)   5269 -|------| OTHER XMPP |    |
+(HTTP-Admin) 9099 -|      |            |    |
+(BOSH)  7079/7449 -|      +------+-----+    |
+                   |             |          |
+                   |             |          |
+                   |       +-----+----+     |
+                   |       |          |     |
+(Database)   5433 -|-------| OTHER DB |     |
+                   |       |          |     |
+                   |       +----------+     |
+                   |       172.60.0.111     |
+                   |  [fd23:d79:d076::111]  |
+                   |                        |
+                   +------172.60.0.0/24-----+
+                        fd23:0d79:d076::/64
+
+```
+
 ### Removing a node from the network
 
 To remove a node from the network run the following command:

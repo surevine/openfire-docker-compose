@@ -1,0 +1,22 @@
+services:
+
+  db:
+    networks:
+      openfire-net:
+        ipv4_address: 172.60.0.11
+
+  xmpp1:
+    networks:
+      openfire-net:
+        ipv4_address: 172.60.0.10
+    extra_hosts:
+      - "xmpp1.localhost.example=172.60.0.10"
+      - "conference.xmpp.localhost.example=172.60.0.10"
+
+networks:
+  openfire-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.60.0.0/24

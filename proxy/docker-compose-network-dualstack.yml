@@ -1,0 +1,32 @@
+services:
+
+  db:
+    networks:
+      openfire-net:
+        ipv4_address: 172.60.0.11
+        ipv6_address: fd23:d79:d076::11
+
+  proxy:
+    networks:
+      openfire-net:
+        ipv4_address: 172.60.0.99
+        ipv6_address: fd23:d79:d076::99
+
+  xmpp:
+    networks:
+      openfire-net:
+        ipv4_address: 172.60.0.10
+        ipv6_address: fd23:d79:d076::10
+    extra_hosts:
+      - "xmpp1.localhost.example=fd23:d79:d076::10"
+      - "conference.xmpp1.localhost.example=fd23:d79:d076::10"
+
+networks:
+  openfire-net:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.60.0.0/24
+        - subnet: fd23:0d79:d076::/64

@@ -12,10 +12,7 @@ services:
       - "POSTGRES_PASSWORD=hunter2"
     volumes:
       - ./sql:/docker-entrypoint-initdb.d
-    networks:
-      openfire-net:
-        ipv4_address: 172.60.0.11
-  
+
   xmpp1:
     image: "openfire:${OPENFIRE_TAG}"
     ports:
@@ -31,12 +28,6 @@ services:
       - ./_data/plugins:/opt/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
     command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
-    networks:
-      openfire-net:
-        ipv4_address: 172.60.0.10
-    extra_hosts:
-      - "xmpp.localhost.example:172.60.0.10"
-      - "conference.xmpp.localhost.example:172.60.0.10"
 
   dozzle:
     image: amir20/dozzle:latest
@@ -44,11 +35,3 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 9999:8080
-
-networks:
-  openfire-net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.60.0.0/24
