@@ -12,9 +12,6 @@ services:
       - "POSTGRES_PASSWORD=hunter2"
     volumes:
       - ./sql:/docker-entrypoint-initdb.d
-    networks:
-      openfire-clustered-net:
-        ipv4_address: 172.60.0.11
 
   lb:
     image: nginx:stable
@@ -24,10 +21,7 @@ services:
       - "57443:57443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    networks:
-      openfire-clustered-net:
-        ipv4_address: 172.60.0.99
-  
+
   xmpp1:
     image: "openfire:${OPENFIRE_TAG}"
     ports:
@@ -42,17 +36,7 @@ services:
       - ./_data/xmpp/1/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
-    networks:
-      openfire-clustered-net:
-        ipv4_address: 172.60.0.10
-    extra_hosts:
-      - "xmpp1.localhost.example:172.60.0.10"
-      - "conference.xmpp1.localhost.example:172.60.0.10"
-      - "xmpp2.localhost.example:172.60.0.20"
-      - "conference.xmpp2.localhost.example:172.60.0.20"
-      - "xmpp3.localhost.example:172.60.0.30"
-      - "conference.xmpp3.localhost.example:172.60.0.30"
+    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4}"]
 
   xmpp2:
     image: "openfire:${OPENFIRE_TAG}"
@@ -68,17 +52,7 @@ services:
       - ./_data/xmpp/2/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
-    networks:
-      openfire-clustered-net:
-        ipv4_address: 172.60.0.20
-    extra_hosts:
-      - "xmpp1.localhost.example:172.60.0.10"
-      - "conference.xmpp1.localhost.example:172.60.0.10"
-      - "xmpp2.localhost.example:172.60.0.20"
-      - "conference.xmpp2.localhost.example:172.60.0.20"
-      - "xmpp3.localhost.example:172.60.0.30"
-      - "conference.xmpp3.localhost.example:172.60.0.30"
+    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4}"]
 
   xmpp3:
     image: "openfire:${OPENFIRE_TAG}"
@@ -94,17 +68,7 @@ services:
       - ./_data/xmpp/3/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh"]
-    networks:
-      openfire-clustered-net:
-        ipv4_address: 172.60.0.30
-    extra_hosts:
-      - "xmpp1.localhost.example:172.60.0.10"
-      - "conference.xmpp1.localhost.example:172.60.0.10"
-      - "xmpp2.localhost.example:172.60.0.20"
-      - "conference.xmpp2.localhost.example:172.60.0.20"
-      - "xmpp3.localhost.example:172.60.0.30"
-      - "conference.xmpp3.localhost.example:172.60.0.30"
+    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4}"]
 
   dozzle:
     image: amir20/dozzle:latest
@@ -112,11 +76,3 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 9999:8080
-
-networks:
-  openfire-clustered-net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.60.0.0/24

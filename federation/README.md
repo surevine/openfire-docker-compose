@@ -52,6 +52,35 @@ XMPP 2 hosts the following MUC rooms:
 
 The Docker compose file defines a custom bridge network with a single subnet of `172.50.0.0/24`
 
+When the `-6` argument to `./start.sh` is provided, then an additional subnet of `fd23:0d79:d076::/64` is configured.
+Then, IPv6 is preferred for internal networking. Note that the IPv4 network remains in place, as Docker does not support
+IPv6-only containers.
+
+When running with the optional `-6` flag (that adds IPv6 support) the system looks like this:
+
+```
+                   +---------------------------------------------+
+                   |  [fd23:d79:d076::10]  [fd23:d79:d076::20]   |
+                   |      172.50.0.10           172.50.0.20      |
+                   |      +--------+            +--------+       |
+(XMPP-C2S)   5221 -|      |        |            |        |       |- 5222 (XMPP-C2S)
+(XMPP-S2S)   5261 -|------| XMPP 1 +============+ XMPP 2 |-------|- 5262 (XMPP-S2S)
+(HTTP-Admin) 9091 -|      |        |            |        |       |- 9092 (HTTP-Admin)
+(BOSH)  7071/7441 -|      +----+---+            +----+---+       |- 7072/7442 (BOSH)
+                   |           |                     |           |
+                   |           |                     |           |
+                   |       +---+--+               +--+---+       |
+                   |       |      |               |      |       |
+(Database)   5431 -|-------| DB 1 |               | DB 2 |-------|- 5432 (Database)
+                   |       |      |               |      |       |
+                   |       +------+               +------+       |
+                   |      172.50.0.11            172.50.0.21     |
+                   |  [fd23:d79:d076::11]  [fd23:d79:d076::21]   |
+                   |                                             |
+                   +----------------172.50.0.0/24----------------+
+                                 fd23:0d79:d076::/64
+```
+
 ### Removing a node from the network
 
 To remove a node from the network run the following command:
@@ -93,15 +122,15 @@ The convention I have followed is to increment the IP addresses by 10 and the po
 
 For `xmpp1`
 
-* Openfire IP: `172.50.0.10`
-* DB IP: `172.50.0.11`
+* Openfire IP: `172.50.0.10` / `fd23:d79:d076::10`
+* DB IP: `172.50.0.11` / `fd23:d79:d076::11`
 * XMPP port: `5221`
 * Admin port: `9091`
 
 For `xmpp2`
 
-* Openfire IP: `172.50.0.20`
-* DB IP: `172.50.0.21`
+* Openfire IP: `172.50.0.20` / `fd23:d79:d076::20`
+* DB IP: `172.50.0.21` / `fd23:d79:d076::21`
 * XMPP port: `5222`
 * Admin port: `9092`
 
@@ -117,6 +146,7 @@ db3:
   networks:
     openfire-federated-net:
       ipv4_address: 172.50.0.31
+      ipv6_address: fd23:d79:d076::31
 
 xmpp3:
   image: openfire:latest
@@ -128,14 +158,17 @@ xmpp3:
   networks:
     openfire-federated-net:
       ipv4_address: 172.50.0.30
+      ipv6_address: fd23:d79:d076::30
 
 networks:
   openfire-federated-net:
     driver: bridge
+    enable_ipv6: true
     ipam:
       driver: default
       config:
         - subnet: 172.50.0.0/24
+        - subnet: fd23:0d79:d076::/64
 ```
 
 Run this with the `start.sh`. Once running navigate to `http://localhost:9093` and manually configure the Openfire server.
@@ -192,3 +225,43 @@ xmpp3:
 ...
 
 ```
+
+Add the IPv4-only network definition in `docker-compose-federated-ipv4-only.yml`:
+
+```
+...
+
+db3:
+  networks:
+    openfire-federated-net:
+      ipv4_address: 172.50.0.31
+
+xmpp3:
+  networks:
+    openfire-federated-net:
+      ipv4_address: 172.50.0.30
+...
+
+```
+
+Add the dual-stack network definition in `docker-compose-federated-dualstack.yml` (note that this also includes IPv4 config):
+
+```
+...
+
+db3:
+  networks:
+    openfire-federated-net:
+      ipv4_address: 172.50.0.31
+      ipv6_address: fd23:d79:d076::31
+
+xmpp3:
+  networks:
+    openfire-federated-net:
+      ipv4_address: 172.50.0.30
+      ipv6_address: fd23:d79:d076::30
+...
+
+```
+
+Lastly, add the new host in all `extra_hosts` configuration blocks.

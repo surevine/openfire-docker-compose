@@ -1,0 +1,40 @@
+services:
+
+  db1:
+    networks:
+      openfire-federated-net:
+        ipv4_address: 172.50.0.11
+
+  db2:
+    networks:
+      openfire-federated-net:
+        ipv4_address: 172.50.0.21
+
+  xmpp1:
+    networks:
+      openfire-federated-net:
+        ipv4_address: 172.50.0.10
+    extra_hosts:
+      - "xmpp1.localhost.example:172.50.0.10"
+      - "conference.xmpp1.localhost.example:172.50.0.10"
+      - "xmpp2.localhost.example:172.50.0.20"
+      - "conference.xmpp2.localhost.example:172.50.0.20"
+
+  xmpp2:
+    networks:
+      openfire-federated-net:
+        ipv4_address: 172.50.0.20
+    extra_hosts:
+      - "xmpp1.localhost.example:172.50.0.10"
+      - "conference.xmpp1.localhost.example:172.50.0.10"
+      - "xmpp2.localhost.example:172.50.0.20"
+      - "conference.xmpp2.localhost.example:172.50.0.20"
+
+networks:
+  openfire-federated-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.50.0.0/24
+
