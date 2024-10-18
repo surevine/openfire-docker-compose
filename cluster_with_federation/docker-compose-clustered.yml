@@ -36,7 +36,7 @@ services:
       - ./_data/xmpp/1/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4}"]
+    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4} -Djava.net.preferIPv6Addresses=${PREFER_IPV6}"]
 
   xmpp2:
     image: "openfire:${OPENFIRE_TAG}"
@@ -52,7 +52,7 @@ services:
       - ./_data/xmpp/2/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4}"]
+    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4} -Djava.net.preferIPv6Addresses=${PREFER_IPV6}"]
 
   xmpp3:
     image: "openfire:${OPENFIRE_TAG}"
@@ -68,7 +68,7 @@ services:
       - ./_data/xmpp/3/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
       - ../_common/wait-for-it.sh:/wait-for-it.sh
-    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4}"]
+    command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4} -Djava.net.preferIPv6Addresses=${PREFER_IPV6}"]
 
   otherdb:
     image: library/postgres:9.6.24-alpine

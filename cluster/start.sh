@@ -13,6 +13,7 @@ COMPOSE_FILE_COMMAND+=("--project-name" "$PROJECT")
 
 NETWORK_COMPOSE_FILE="docker-compose-network-ipv4-only.yml"
 PREFER_IPV4="true"
+PREFER_IPV6="false"
 
 # Where is this script? It could be called from anywhere, so use this to get full paths.
 SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
@@ -35,6 +36,7 @@ while getopts n:6h o; do
 				echo "Using IPv6"
 				NETWORK_COMPOSE_FILE="docker-compose-network-dualstack.yml"
 				PREFER_IPV4="false"
+				PREFER_IPV6="true"
         ;;
     h)
         usage
@@ -46,6 +48,7 @@ while getopts n:6h o; do
 done
 
 export PREFER_IPV4
+export PREFER_IPV6
 
 echo "Starting a clustered environment."
 COMPOSE_FILE_COMMAND+=("-f" "docker-compose-clustered.yml")
