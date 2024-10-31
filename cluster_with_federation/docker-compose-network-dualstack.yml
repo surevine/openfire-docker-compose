@@ -1,0 +1,85 @@
+services:
+
+  db:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.11
+        ipv6_address: fd23:d79:d076::11
+
+  lb:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.99
+        ipv6_address: fd23:d79:d076::99
+
+  xmpp1:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.10
+        ipv6_address: fd23:d79:d076::10
+    extra_hosts:
+      - "xmpp1.localhost.example=fd23:d79:d076::10"
+      - "conference.xmpp1.localhost.example=fd23:d79:d076::10"
+      - "xmpp2.localhost.example=fd23:d79:d076::20"
+      - "conference.xmpp2.localhost.example=fd23:d79:d076::20"
+      - "xmpp3.localhost.example=fd23:d79:d076::30"
+      - "conference.xmpp3.localhost.example=fd23:d79:d076::30"
+      - "otherxmpp.localhost.example=fd23:d79:d076::110"
+      - "conference.otherxmpp.localhost.example=fd23:d79:d076::110"
+
+  xmpp2:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.20
+        ipv6_address: fd23:d79:d076::20
+    extra_hosts:
+      - "xmpp1.localhost.example=fd23:d79:d076::10"
+      - "conference.xmpp1.localhost.example=fd23:d79:d076::10"
+      - "xmpp2.localhost.example=fd23:d79:d076::20"
+      - "conference.xmpp2.localhost.example=fd23:d79:d076::20"
+      - "xmpp3.localhost.example=fd23:d79:d076::30"
+      - "conference.xmpp3.localhost.example=fd23:d79:d076::30"
+      - "otherxmpp.localhost.example=fd23:d79:d076::110"
+      - "conference.otherxmpp.localhost.example=fd23:d79:d076::110"
+
+  xmpp3:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.30
+        ipv6_address: fd23:d79:d076::30
+    extra_hosts:
+      - "xmpp1.localhost.example=fd23:d79:d076::10"
+      - "conference.xmpp1.localhost.example=fd23:d79:d076::10"
+      - "xmpp2.localhost.example=fd23:d79:d076::20"
+      - "conference.xmpp2.localhost.example=fd23:d79:d076::20"
+      - "xmpp3.localhost.example=fd23:d79:d076::30"
+      - "conference.xmpp3.localhost.example=fd23:d79:d076::30"
+      - "otherxmpp.localhost.example=fd23:d79:d076::110"
+      - "conference.otherxmpp.localhost.example=fd23:d79:d076::110"
+
+  otherdb:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.111
+        ipv6_address: fd23:d79:d076::111
+
+  otherxmpp:
+    networks:
+      openfire-clustered-net:
+        ipv4_address: 172.60.0.110
+        ipv6_address: fd23:d79:d076::110
+    extra_hosts:
+      - "xmpp.localhost.example=fd23:d79:d076::99"
+      - "conference.xmpp.localhost.example=fd23:d79:d076::99"
+      - "otherxmpp.localhost.example=fd23:d79:d076::110"
+      - "conference.otherxmpp.localhost.example=fd23:d79:d076::110"
+  
+networks:
+  openfire-clustered-net:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.60.0.0/24
+        - subnet: fd23:0d79:d076::/64
