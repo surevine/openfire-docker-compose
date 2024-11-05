@@ -1,8 +1,9 @@
 #!/bin/bash
 
-usage() { echo "Usage: $0 [-n openfire-tag] [-6] [-h]
+usage() { echo "Usage: $0 [-n openfire-tag] [-6] [-o] [-h]
   -n openfire-tag  Launches all Openfire instances with the specified tag. This overrides the value in .env
   -6               Replace standard IPv4-based bridge networking with IPv6.
+  -o               Enable OCSP support, generates compatible certificates, & deploys associated OCSP responder
   -h               Show this helpful information
 "; exit 0; }
 
@@ -20,7 +21,7 @@ source "$SCRIPTPATH/../_common/functions.sh"
 
 check_deps
 
-while getopts n:6h o; do
+while getopts n:6oh o; do
   case "$o" in
     n)
         if [[ $OPTARG =~ " " ]]; then
@@ -33,6 +34,10 @@ while getopts n:6h o; do
     6)
 				echo "Using IPv6"
 				NETWORK_COMPOSE_FILE="docker-compose-network-dualstack.yml"
+        ;;
+    o)
+        echo "Enabling OCSP support"
+        export ENABLE_OCSP=true
         ;;
     h)
         usage
@@ -59,6 +64,13 @@ fi
 mkdir _data
 cp -r xmpp _data/
 cp -r plugins _data/
+
+if [ "$ENABLE_OCSP" = true ]; then
+  echo "Enabling OCSP support"
+  "$SCRIPTPATH"/scripts/generate-certificates.sh
+  "$SCRIPTPATH"/scripts/import-certificates.sh
+  COMPOSE_FILE_COMMAND+=("-f" "docker-compose-ocsp-responder.yml")
+fi
 
 "${COMPOSE_FILE_COMMAND[@]}" up -d || popd
 popd
