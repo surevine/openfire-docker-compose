@@ -101,6 +101,67 @@ For example:
 
 `docker network connect openfire-testing_openfire-federated-net openfire-testing_xmpp1_1`
 
+## Certificates
+
+By default, the system uses self-signed certificates that have been pre-generated and added 
+to the identity and trust stores for `xmpp1.localhost.example` and `xmpp2.localhost.example`.
+
+This simplifies the setup process and avoids the need to generate certificates, but the
+limitations of this are that the certificates are not trusted by anything other than 
+our own servers (`xmpp1` and `xmpp2`), and that they do not support OCSP (Online Certificate 
+Status Protocol).
+
+### OCSP Support
+A more fully featured solution is provided by the `-o` option of the `start.sh` script 
+which enables OCSP support for the Openfire federated environment. When passed the `-o` 
+option the script will generate a complete certificate hierarchy with OCSP support, and 
+deploy an OCSP responder service configured to respond to OCSP requests for the server 
+certificates. 
+
+Here's what the script creates:
+
+* Root CA certificate (self-signed)
+* Intermediate CA certificate (signed by Root CA)
+* Two server certificates with OCSP information (one for each Openfire instance)
+* An OCSP responder certificate (for signing OCSP responses)
+* Full certificate chains for both servers (server + intermediate + root)
+* Certificate database (index.txt) for the OCSP responder to track certificate statuses
+
+All certificates are stored in `./_data/certs/`.
+
+```
+                           Root CA
+                      (Top level trust root)
+                      (Kept offline/secure)
+                              |
+                              v
+                       Intermediate CA
+                  (Day-to-day certificate issuer)
+                  (OCSP configuration point)
+                              |
+         +--------------------+------------------+
+         v                    v                  v
+    XMPP1 Cert            XMPP2 Cert         OCSP Cert
+         |                    |              (Signs OCSP responses)
+         v                    v
+   XMPP1 Server          XMPP2 Server
+    [keystore]             [keystore]
+    (server's identity)    (server's identity)
+    [truststore]           [truststore]
+    (who to trust)         (who to trust)
+```
+
+This setup allows certificates to be checked for revocation status making a request to the 
+OCSP responder:
+```bash
+openssl ocsp -url http://localhost:8888 \
+  -issuer _data/certs/ca/intermediate-ca/intermediate.crt \
+  -CAfile _data/certs/chain1.pem \
+  -cert _data/certs/server1.crt \
+  -text
+```
+
+
 ## How it's built
 
 To recreate the known good state for the system we first create base Openfire and Postgres containers.
