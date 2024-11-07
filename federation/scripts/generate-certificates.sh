@@ -2,7 +2,7 @@
 
 # OCSP server configuration
 # Defines where the OCSP responder will be accessible in the Docker network
-OCSP_URL="http://172.50.0.30:8888"
+OCSP_URL="http://ocsp.localhost.example:8888"
 
 # Base directory for all certificate-related files
 # All paths in this script will be relative to this directory
