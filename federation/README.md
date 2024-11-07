@@ -48,6 +48,20 @@ XMPP 2 hosts the following MUC rooms:
 * `muc3`
 * `muc4`
 
+## Hosts file entries
+To access the XMPP servers and (optional) OCSP responder from your local machine you should 
+add entries to your hosts file:
+
+```
+127.0.0.1 xmpp.localhost.example
+127.0.0.1 xmpp1.localhost.example
+127.0.0.1 xmpp2.localhost.example
+127.0.0.1 xmpp3.localhost.example
+127.0.0.1 ocsp.localhost.example
+```
+
+This helps when testing with various clients and tools.
+
 ## Network
 
 The Docker compose file defines a custom bridge network with a single subnet of `172.50.0.0/24`
@@ -153,6 +167,7 @@ All certificates are stored in `./_data/certs/`.
 
 This setup allows certificates to be checked for revocation status making a request to the 
 OCSP responder:
+```bash
 ```bash
 openssl ocsp -url http://localhost:8888 \
   -issuer _data/certs/ca/intermediate-ca/intermediate.crt \

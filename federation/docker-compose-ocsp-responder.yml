@@ -15,11 +15,11 @@ services:
   #
   # Test Certificate Status:
   # ----------------------
-  # openssl ocsp -url http://localhost:8888 \
+  # openssl ocsp -url http://ocsp.localhost.example:8888 \
   #   -issuer _data/certs/ca/intermediate-ca/intermediate.crt \
   #   -CAfile _data/certs/chain1.pem \
   #   -cert _data/certs/server1.crt \
-  #   -text   # Adds human-readable output
+  #   -text
   ocsp-responder:
     image: alpine:latest
     volumes:
