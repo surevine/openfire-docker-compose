@@ -70,7 +70,8 @@ When the `-6` argument to `./start.sh` is provided, then an additional subnet of
 Then, IPv6 is preferred for internal networking. Note that the IPv4 network remains in place, as Docker does not support
 IPv6-only containers.
 
-When running with the optional `-6` flag (that adds IPv6 support) the system looks like this:
+When running with the optional `-6` and `-o` flags (that add IPv6 and OCSP support 
+respectively), and the system looks like this:
 
 ```
                    +---------------------------------------------+
@@ -91,6 +92,11 @@ When running with the optional `-6` flag (that adds IPv6 support) the system loo
                    |      172.50.0.11            172.50.0.21     |
                    |  [fd23:d79:d076::11]  [fd23:d79:d076::21]   |
                    |                                             |
+                   |               +-----------+                 |
+(OCSP)       8888 -|---------------|   OCSP    |                 |
+                   |               | Responder |                 |
+                   |               | 172.50.88 |                 |
+                   |               +-----------+                 |
                    +----------------172.50.0.0/24----------------+
                                  fd23:0d79:d076::/64
 ```
