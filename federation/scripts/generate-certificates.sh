@@ -9,6 +9,12 @@ OCSP_URL="http://ocsp.localhost.example:8888"
 CERT_DIR="./_data/certs"
 XMPP_BASE_DIR="./_data/xmpp"
 
+# Check if OpenSSL is installed
+if ! command -v openssl &> /dev/null; then
+    echo "Error: OpenSSL is not installed"
+    exit 1
+fi
+
 # Function to check which server directories exist
 get_server_instances() {
     local instances=()

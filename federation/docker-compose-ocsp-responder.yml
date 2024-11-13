@@ -17,8 +17,8 @@ services:
   # ----------------------
   # openssl ocsp -url http://ocsp.localhost.example:8888 \
   #   -issuer _data/certs/ca/intermediate-ca/intermediate.crt \
-  #   -CAfile _data/certs/chain1.pem \
-  #   -cert _data/certs/server1.crt \
+  #   -CAfile _data/certs/xmpp1.pem \
+  #   -cert _data/certs/xmpp1.crt \
   #   -text
   ocsp-responder:
     image: alpine:latest
