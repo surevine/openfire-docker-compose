@@ -39,4 +39,4 @@ services:
       - "8888:8888"
     networks:
       openfire-federated-net:
-        ipv4_address: 172.50.0.30
+        ipv4_address: 172.50.0.88
