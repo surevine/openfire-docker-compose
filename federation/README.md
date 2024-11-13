@@ -98,7 +98,7 @@ respectively), and the system looks like this:
                    |               | 172.50.88 |                 |
                    |               +-----------+                 |
                    +----------------172.50.0.0/24----------------+
-                                 fd23:0d79:d076::/64
+                                fd23:0d79:d076::/64
 ```
 
 ### Removing a node from the network
@@ -144,7 +144,7 @@ Here's what the script creates:
 * Intermediate CA certificate (signed by Root CA)
 * Two server certificates with OCSP information (one for each Openfire instance)
 * An OCSP responder certificate (for signing OCSP responses)
-* Full certificate chains for both servers (server + intermediate + root)
+* Full certificate chains for each XMPP server (server + intermediate + root)
 * Certificate database (index.txt) for the OCSP responder to track certificate statuses
 
 All certificates are stored in `./_data/certs/`.
@@ -174,14 +174,56 @@ All certificates are stored in `./_data/certs/`.
 This setup allows certificates to be checked for revocation status making a request to the 
 OCSP responder:
 ```bash
-```bash
 openssl ocsp -url http://localhost:8888 \
-  -issuer _data/certs/ca/intermediate-ca/intermediate.crt \
-  -CAfile _data/certs/chain1.pem \
-  -cert _data/certs/server1.crt \
-  -text
+    -issuer _data/certs/ca/intermediate-ca/intermediate.crt \
+    -CAfile _data/certs/xmpp1_chain.pem \
+    -cert _data/certs/xmpp1.crt \
+    -text
 ```
 
+### Certificate Revocation
+
+The `revocation.sh` script allows you to revoke SSL certificates and 
+update the OCSP responder's database. You can also un-revoke certificates 
+that were previously revoked.
+
+```bash
+./revocation.sh --server xmpp1 [--reason reason] [--unrevoke]
+```
+
+Available revocation reasons:
+- unspecified (default)
+- keyCompromise
+- CACompromise
+- affiliationChanged
+- superseded
+- cessationOfOperation
+- certificateHold
+
+Examples:
+```bash
+# Revoke xmpp1's certificate
+./revocation.sh --server xmpp1
+
+# Revoke with specific reason
+./revocation.sh --server xmpp1 --reason keyCompromise
+
+# Remove revocation status
+./revocation.sh --server xmpp1 --unrevoke
+```
+
+To verify the current status:
+```bash
+openssl ocsp -url http://localhost:8888 \
+    -issuer _data/certs/ca/intermediate-ca/intermediate.crt \
+    -CAfile _data/certs/xmpp1_chain.pem \
+    -cert _data/certs/xmpp1.crt \
+    -text
+```
+
+Note: The first OCSP status check may return the previous status. Run 
+the check again if this happens - subsequent checks will show the 
+current status.
 
 ## How it's built
 
