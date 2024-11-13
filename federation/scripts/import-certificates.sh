@@ -7,17 +7,35 @@ KEYSTORE_PASSWORD="changeit"
 # Base directory where certificates were generated
 # This should match the CERT_DIR from the certificate generation script
 CERT_DIR="./_data/certs"
+XMPP_BASE_DIR="./_data/xmpp"
+
+# Function to check which server directories exist
+get_server_instances() {
+    local instances=()
+    # Look for numbered directories in the xmpp base directory
+    for dir in "$XMPP_BASE_DIR"/*/; do
+        if [[ -d "$dir" ]]; then
+            # Extract the number from the directory name
+            local num=$(basename "$dir")
+            if [[ "$num" =~ ^[0-9]+$ ]]; then
+                instances+=("$num")
+            fi
+        fi
+    done
+    echo "${instances[@]}"
+}
 
 # Function to import certificates and set up keystores/truststores for one Openfire instance
 # Parameters:
-#   $1: instance number (1 or 2 for xmpp1/xmpp2)
+#   $1: instance number (1, 2, or 3 for xmpp1/xmpp2/xmpp3)
 import_certificates() {
     local instance=$1
+    local server_name="xmpp${instance}"
 
     # Directory where Openfire expects to find its certificates
     local conf_dir="_data/xmpp/${instance}/conf/security"
 
-    echo "Importing certificates for Openfire instance ${instance}..."
+    echo "Importing certificates for ${server_name}..."
 
     # Ensure the security directory exists
     mkdir -p "${conf_dir}"
@@ -25,7 +43,7 @@ import_certificates() {
     # Remove any existing keystore to start fresh
     rm -f "${conf_dir}/keystore"
 
-    echo "Creating new keystore for instance ${instance}"
+    echo "Creating new keystore for ${server_name}"
     # Create a new empty keystore by generating and immediately deleting a temporary keypair
     # This ensures the keystore is properly initialized with the correct format
     keytool -genkeypair \
@@ -46,12 +64,12 @@ import_certificates() {
     # First convert them to PKCS12 format which can be imported into a Java keystore
     echo "Importing server certificate and private key..."
     openssl pkcs12 -export \
-        -in "${CERT_DIR}/server${instance}.crt" \
-        -inkey "${CERT_DIR}/server${instance}.key" \
+        -in "${CERT_DIR}/${server_name}.crt" \
+        -inkey "${CERT_DIR}/${server_name}.key" \
         -chain \
-        -CAfile "${CERT_DIR}/chain${instance}.pem" \
-        -name "xmpp${instance}.localhost.example" \
-        -out "${CERT_DIR}/server${instance}.p12" \
+        -CAfile "${CERT_DIR}/${server_name}_chain.pem" \
+        -name "${server_name}.localhost.example" \
+        -out "${CERT_DIR}/${server_name}.p12" \
         -password "pass:${KEYSTORE_PASSWORD}"
 
     # Import the PKCS12 file into the keystore
@@ -59,15 +77,15 @@ import_certificates() {
         -deststorepass "${KEYSTORE_PASSWORD}" \
         -destkeypass "${KEYSTORE_PASSWORD}" \
         -destkeystore "${conf_dir}/keystore" \
-        -srckeystore "${CERT_DIR}/server${instance}.p12" \
+        -srckeystore "${CERT_DIR}/${server_name}.p12" \
         -srcstoretype PKCS12 \
         -srcstorepass "${KEYSTORE_PASSWORD}" \
-        -alias "xmpp${instance}.localhost.example"
+        -alias "${server_name}.localhost.example"
 
     # Create or update truststore
     # truststore - used by the server to verify other servers
     if [ ! -f "${conf_dir}/truststore" ]; then
-        echo "Creating new truststore for instance ${instance}"
+        echo "Creating new truststore for ${server_name}"
         # Initialize a new truststore with a dummy entry
         keytool -importpass \
             -keystore "${conf_dir}/truststore" \
@@ -106,21 +124,34 @@ import_certificates() {
         echo "Intermediate CA already exists in truststore"
     fi
 
-    echo "Certificate import completed for instance ${instance}"
+    echo "Certificate import completed for ${server_name}"
 }
 
 # Main script execution
-
 echo "Starting certificate import process..."
 
-# Import certificates for both Openfire instances
-import_certificates 1
-import_certificates 2
+# Get the list of server instances that exist
+SERVER_INSTANCES=($(get_server_instances))
+
+if [ ${#SERVER_INSTANCES[@]} -eq 0 ]; then
+    echo "Error: No server directories found in ${XMPP_BASE_DIR}"
+    exit 1
+fi
+
+echo "Found server directories for instances: ${SERVER_INSTANCES[*]}"
+
+# Import certificates for each existing server instance
+for instance in "${SERVER_INSTANCES[@]}"; do
+    echo "Importing certificates for xmpp${instance}"
+    import_certificates "$instance"
+done
 
 # Clean up temporary PKCS12 files that were created during the import process
 rm -f "${CERT_DIR}"/*.p12
 
 # Display commands that can be used to verify the keystore contents
 echo -e "\nTo verify the keystores, run:"
-echo "keytool -list -keystore _data/xmpp/1/conf/security/keystore -storepass ${KEYSTORE_PASSWORD}"
-echo "keytool -list -keystore _data/xmpp/1/conf/security/truststore -storepass ${KEYSTORE_PASSWORD}"
+for instance in "${SERVER_INSTANCES[@]}"; do
+    echo "keytool -list -keystore _data/xmpp/${instance}/conf/security/keystore -storepass ${KEYSTORE_PASSWORD}"
+    echo "keytool -list -keystore _data/xmpp/${instance}/conf/security/truststore -storepass ${KEYSTORE_PASSWORD}"
+done
