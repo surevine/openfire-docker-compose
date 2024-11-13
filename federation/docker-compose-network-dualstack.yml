@@ -22,6 +22,7 @@ services:
       - "conference.xmpp1.localhost.example=fd23:d79:d076::10"
       - "xmpp2.localhost.example=fd23:d79:d076::20"
       - "conference.xmpp2.localhost.example=fd23:d79:d076::20"
+      - "ocsp.localhost.example:172.50.0.88"
 
   xmpp2:
     networks:
@@ -33,6 +34,7 @@ services:
       - "conference.xmpp1.localhost.example=fd23:d79:d076::10"
       - "xmpp2.localhost.example=fd23:d79:d076::20"
       - "conference.xmpp2.localhost.example=fd23:d79:d076::20"
+      - "ocsp.localhost.example:172.50.0.88"
 
 networks:
   openfire-federated-net:
