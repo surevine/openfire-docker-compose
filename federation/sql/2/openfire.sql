@@ -713,6 +713,7 @@ COPY public.ofprivacylist (username, name, isdefault, list) FROM stdin;
 COPY public.ofproperty (name, propvalue, encrypted, iv) FROM stdin;
 user.scramHashedPasswordOnly	true	0	\N
 xmpp.socket.ssl.active	true	0	\N
+log.trace.enabled	true	0	\N
 provider.admin.className	org.jivesoftware.openfire.admin.DefaultAdminProvider	0	\N
 xmpp.domain	xmpp2.localhost.example	0	\N
 xmpp.auth.anonymous	false	0	\N
