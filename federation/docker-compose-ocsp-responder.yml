@@ -28,15 +28,21 @@ services:
       - /bin/sh
       - -c
       - |
-        apk add --no-cache openssl &&
-        openssl ocsp -port 8888 -text \
-        -index /ca/intermediate-ca/index.txt \
-        -CA /ca/intermediate-ca/intermediate.crt \
-        -rkey /ca/ocsp-responder/ocsp.key \
-        -rsigner /ca/ocsp-responder/ocsp.crt \
-        -ndays 1
+        apk add --no-cache openssl socat
+
+        # Start OCSP responder on localhost using a different port
+        openssl ocsp -port 8887 -text \
+          -index /ca/intermediate-ca/index.txt \
+          -CA /ca/intermediate-ca/intermediate.crt \
+          -rkey /ca/ocsp-responder/ocsp.key \
+          -rsigner /ca/ocsp-responder/ocsp.crt \
+          -ndays 1 &
+
+        # Use socat to create IPv6 and IPv4 listeners that forward to the OCSP responder
+        socat TCP6-LISTEN:8888,fork,ipv6-v6only=1 TCP4:127.0.0.1:8887 &
+        socat TCP4-LISTEN:8888,fork TCP4:127.0.0.1:8887 &
+
+        # Keep container running and log any errors
+        wait
     ports:
       - "8888:8888"
-    networks:
-      openfire-federated-net:
-        ipv4_address: 172.50.0.88
