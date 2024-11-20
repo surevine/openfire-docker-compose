@@ -33,11 +33,12 @@ while getopts n:6oh o; do
         ;;
     6)
 				echo "Using IPv6"
+				USING_IPV6=true
 				NETWORK_COMPOSE_FILE="docker-compose-network-dualstack.yml"
         ;;
     o)
         echo "Enabling OCSP support"
-        export ENABLE_OCSP=true
+        ENABLE_OCSP=true
         ;;
     h)
         usage
@@ -70,6 +71,11 @@ if [ "$ENABLE_OCSP" = true ]; then
   "$SCRIPTPATH"/scripts/generate-certificates.sh
   "$SCRIPTPATH"/scripts/import-certificates.sh
   COMPOSE_FILE_COMMAND+=("-f" "docker-compose-ocsp-responder.yml")
+  if [ "$USING_IPV6" = true ]; then
+    COMPOSE_FILE_COMMAND+=("-f" "docker-compose-ocsp-responder-ipv6.yml")
+  else
+    COMPOSE_FILE_COMMAND+=("-f" "docker-compose-ocsp-responder-ipv4.yml")
+  fi
 fi
 
 "${COMPOSE_FILE_COMMAND[@]}" up -d || popd

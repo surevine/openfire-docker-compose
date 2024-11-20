@@ -1,0 +1,6 @@
+services:
+  ocsp-responder:
+    networks:
+      openfire-federated-net:
+        ipv4_address: 172.50.0.88
+        ipv6_address: fd23:d79:d076::88
