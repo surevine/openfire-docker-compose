@@ -36,7 +36,8 @@ services:
           -CA /ca/intermediate-ca/intermediate.crt \
           -rkey /ca/ocsp-responder/ocsp.key \
           -rsigner /ca/ocsp-responder/ocsp.crt \
-          -ndays 1 &
+          -ndays 1 \
+          -ignore_err &
 
         # Use socat to create IPv6 and IPv4 listeners that forward to the OCSP responder
         socat TCP6-LISTEN:8888,fork,ipv6-v6only=1 TCP4:127.0.0.1:8887 &
