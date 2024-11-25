@@ -186,12 +186,15 @@ openssl ocsp -url http://localhost:8888 \
 
 ### Certificate Revocation
 
-The `revocation.sh` script allows you to revoke SSL certificates and 
+The `./scripts/revocation.sh` script allows you to revoke SSL certificates and 
 update the OCSP responder's database. You can also un-revoke certificates 
-that were previously revoked.
+that were previously revoked. 
+
+**Important:** Run this script from the root `federation/` directory, as it requires 
+direct access to the `_data` directory containing the certificates and PKI infrastructure.
 
 ```bash
-./revocation.sh --server xmpp1 [--reason reason] [--unrevoke]
+./scripts/revocation.sh --server xmpp1 [--reason reason] [--unrevoke]
 ```
 
 Available revocation reasons:
@@ -206,13 +209,13 @@ Available revocation reasons:
 Examples:
 ```bash
 # Revoke xmpp1's certificate
-./revocation.sh --server xmpp1
+./scripts/revocation.sh --server xmpp1
 
 # Revoke with specific reason
-./revocation.sh --server xmpp1 --reason keyCompromise
+./scripts/revocation.sh --server xmpp1 --reason keyCompromise
 
 # Remove revocation status
-./revocation.sh --server xmpp1 --unrevoke
+./scripts/revocation.sh --server xmpp1 --unrevoke
 ```
 
 To verify the current status:
