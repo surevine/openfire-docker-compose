@@ -36,7 +36,8 @@ When running, the system looks like this:
                    +----------------172.60.0.0/24---------------------+
 ```
 
-Note that the load balancer is configured to be less flappy, with the flappiness controlled by the nginx config, simulating simple round-robin DNS load balancing. Ports from individual servers are exposed and can be hit directly.
+Note that the load balancer is configured to be less flappy, with the flappiness controlled by the nginx config, 
+simulating simple round-robin DNS load balancing. Ports from individual servers are exposed and can be hit directly.
 
 Openfire is configured with the following XMPP domain:
 
@@ -57,6 +58,26 @@ The following MUC rooms are configured:
 
 * `muc1`
 * `muc2`
+
+
+## Hosts file entries
+To access the XMPP servers and load balancer from your local machine you should
+add entries to your hosts file:
+
+```
+127.0.0.1 openfire-lb-1
+127.0.0.1 xmpp.localhost.example
+127.0.0.1 xmpp1.localhost.example
+127.0.0.1 xmpp2.localhost.example
+127.0.0.1 xmpp3.localhost.example
+```
+
+## Client configuration
+Depending on your requirements, you can configure your client to connect via the load balancer 
+at `openfire-lb-1:55222` or directly to the individual servers at:
+- `xmpp1.localhost.example:5221` 
+- `xmpp2.localhost.example:5222`
+- `xmpp3.localhost.example:5223`
 
 ## Network
 
