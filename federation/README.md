@@ -316,7 +316,7 @@ mkdir -p ./xmpp/3
 
 Export the database:
 
-`docker exec -t openfire-testing_db3_1 pg_dump -U openfire openfire > ./sql/3/openfire.sql`
+`docker exec -t openfire-testing_db3_1 pg_dump -U openfire openfire > ./sql/3/000-init-openfire.sql`
 
 Export the Openfire configuration:
 
