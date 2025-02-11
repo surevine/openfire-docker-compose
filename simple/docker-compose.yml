@@ -12,7 +12,7 @@ services:
       - ./sql:/docker-entrypoint-initdb.d
 
   xmpp1:
-    image: "openfire:${OPENFIRE_TAG}"
+    image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
     ports:
       - "5222:5222"
       - "5269:5269"

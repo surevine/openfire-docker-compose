@@ -23,7 +23,7 @@ services:
       - ./sql/2:/docker-entrypoint-initdb.d
 
   xmpp1:
-    image: "openfire:${OPENFIRE_TAG}"
+    image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
     ports:
       - "5221:5222"
       - "5261:5269"
@@ -39,7 +39,7 @@ services:
     command: ["/wait-for-it.sh", "-s", "db1:5432", "--", "/sbin/entrypoint.sh"]
 
   xmpp2:
-    image: "openfire:${OPENFIRE_TAG}"
+    image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
     ports:
       - "5222:5222"
       - "5262:5269"
