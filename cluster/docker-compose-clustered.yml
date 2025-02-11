@@ -21,7 +21,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
 
   xmpp1:
-    image: "openfire:${OPENFIRE_TAG}"
+    image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
     ports:
       - "5221:5222"
       - "5261:5269"
@@ -37,7 +37,7 @@ services:
     command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4} -Djava.net.preferIPv6Addresses=${PREFER_IPV6}"]
 
   xmpp2:
-    image: "openfire:${OPENFIRE_TAG}"
+    image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
     ports:
       - "5222:5222"
       - "5262:5269"
@@ -53,7 +53,7 @@ services:
     command: ["/wait-for-it.sh", "-s", "db:5432", "--", "/sbin/entrypoint.sh", "-Dhazelcast.prefer.ipv4.stack=${PREFER_IPV4} -Djava.net.preferIPv6Addresses=${PREFER_IPV6}"]
 
   xmpp3:
-    image: "openfire:${OPENFIRE_TAG}"
+    image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
     ports:
       - "5223:5222"
       - "5263:5269"

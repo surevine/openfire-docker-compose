@@ -24,7 +24,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
   
   xmpp:
-    image: "openfire:${OPENFIRE_TAG}"
+    image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
     ports:
       - "5222:5222"
       - "5269:5269"
