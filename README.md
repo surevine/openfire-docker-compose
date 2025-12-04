@@ -47,3 +47,18 @@ SQL files use numeric prefixes to control execution order:
 - `001-*.sql`, `002-*.sql`, etc. - Additional seed data or configuration
 
 If you need to add custom SQL scripts (e.g., for test data or configuration), use an appropriate numeric prefix to ensure correct execution order.
+
+## Remote Debugging
+
+All Openfire containers are configured with Java remote debugging enabled via JDWP. The debug agent runs in non-blocking mode (`suspend=n`), so containers start normally without waiting for a debugger to attach.
+
+Debug ports are exposed on localhost:
+
+| Server | Port |
+|--------|------|
+| xmpp1 (or xmpp) | 5005 |
+| xmpp2 | 5006 |
+| xmpp3 | 5007 |
+| otherxmpp | 5008 |
+
+To attach your IDE, create a remote debug configuration pointing to `localhost` on the appropriate port.
