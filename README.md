@@ -48,6 +48,39 @@ SQL files use numeric prefixes to control execution order:
 
 If you need to add custom SQL scripts (e.g., for test data or configuration), use an appropriate numeric prefix to ensure correct execution order.
 
+## Optional SQL Files
+
+The `optional/sql/` directory contains utility SQL scripts that are **not** executed automatically. These are useful for debugging, performance testing, or recreating specific scenarios.
+
+### Using Optional SQL Files
+
+Each file includes a header documenting its purpose and compatibility with different deployment types.
+
+**Method 1: Copy to deployment directory (runs on next fresh start)**
+
+```bash
+# Copy the file to your deployment's sql/ directory
+cp optional/sql/001-generate-test-data.sql simple/sql/
+
+# Start fresh (remove existing DB volume first if needed)
+./start.sh
+```
+
+**Method 2: Run manually against a running database**
+
+```bash
+# Run directly without copying
+docker exec -i simple-db-1 psql -U openfire -d openfire < optional/sql/001-generate-test-data.sql
+```
+
+Replace `simple-db-1` with the appropriate container name for your deployment (e.g., `cluster-db-1`, `federation-db1-1`).
+
+### Available Optional SQL Files
+
+| File | Purpose | Compatibility |
+|------|---------|---------------|
+| `001-generate-test-data.sql` | Generates ~410K MUC messages for slow startup testing | All deployments |
+
 ## Remote Debugging
 
 All Openfire containers are configured with Java remote debugging enabled via JDWP. The debug agent runs in non-blocking mode (`suspend=n`), so containers start normally without waiting for a debugger to attach.
