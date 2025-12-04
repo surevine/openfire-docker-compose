@@ -22,3 +22,14 @@ See the "How it's built" section below if you want to understand how this was do
 ## How it's built
 
 To recreate the known good state for the system we first create base Openfire and relevant database containers. We then perform the manual setup and any other configuration that we require, such as adding users and MUC rooms. Once the setup is complete we dump the database from the container to the Docker host and copy the Openfire config files from the container to the Docker host. These are then used with Docker volumes for creating the same state in subsequent Openfire and database containers.
+
+## SQL Initialisation Scripts
+
+Each deployment option includes SQL files in a `sql/` directory that are mounted to `/docker-entrypoint-initdb.d` in the PostgreSQL container. PostgreSQL executes these files **alphabetically** on first startup.
+
+SQL files use numeric prefixes to control execution order:
+
+- `000-init-openfire.sql` - Schema initialisation (must run first)
+- `001-*.sql`, `002-*.sql`, etc. - Additional seed data or configuration
+
+If you need to add custom SQL scripts (e.g., for test data or configuration), use an appropriate numeric prefix to ensure correct execution order.
