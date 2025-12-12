@@ -27,7 +27,8 @@ Each directory contains a different deployment configuration. Choose the one tha
 |-----------|-------------|
 | `simple/` | Single Openfire server with PostgreSQL database. The simplest configuration for basic testing and development. |
 | `federation/` | Two independent Openfire servers on separate domains (`xmpp1.localhost.example` and `xmpp2.localhost.example`), each with their own database. Use this to test server-to-server (S2S) federation between XMPP domains. |
-| `cluster/` | Three Openfire servers sharing a single database, with an nginx load balancer. Tests Openfire's clustering capabilities using the Hazelcast plugin. |
+| `cluster/` | Three Openfire servers sharing a single pgsql database, with an nginx load balancer. Tests Openfire's clustering capabilities using the Hazelcast plugin. |
+| `cluster_mssql/` | Three Openfire servers sharing a single mssql database, with an nginx load balancer. Tests Openfire's clustering capabilities using the Hazelcast plugin. |
 | `cluster_with_federation/` | A 3-node Openfire cluster plus an additional standalone Openfire server on a different domain (`otherxmpp.localhost.example`). Use this to test clustering and federation simultaneously. |
 | `proxy/` | Single Openfire server with an nginx reverse proxy in front. Use this to test proxy configurations and header handling. |
 
