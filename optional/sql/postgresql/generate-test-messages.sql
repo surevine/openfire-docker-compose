@@ -1,25 +1,29 @@
 -- =============================================================================
--- Generate Test Data: Slow Startup Issue Recreation
+-- Generate Test Messages (~410,000) - PostgreSQL
 -- =============================================================================
 --
--- Compatibility: all deployments (simple, cluster, federation, cluster_with_federation, proxy)
+-- Database: PostgreSQL
+-- Compatibility: All PostgreSQL deployments (simple, cluster, federation, etc.)
 --
 -- Purpose:
---   Generates ~410,000 MUC messages to simulate a long-running environment
---   experiencing slow startup due to large message history.
+--   Generates ~410,000 MUC messages distributed across 2 rooms to simulate a
+--   long-running environment experiencing slow startup due to large message
+--   history. Useful for testing MUC history loading performance.
+--
+-- Prerequisites:
+--   - Rooms with IDs 1 and 2 must exist (messages alternate between them)
+--   - Use with 000-init-openfire.sql which creates default rooms
 --
 -- Usage:
---   1. Copy this file to your deployment's sql/ directory:
+--   Option 1 - Copy to deployment's sql/ directory (runs on container start):
 --
---      cp optional/sql/001-generate-test-data.sql simple/sql/
---
---   2. Restart containers (or start fresh if DB already initialised):
---
+--      cp optional/sql/postgresql/generate-test-messages.sql simple/sql/001-generate-test-messages.sql
 --      ./start.sh
 --
---   Alternatively, run manually against a running database:
+--   Option 2 - Run manually against a running database:
 --
---      docker exec -i simple-db-1 psql -U openfire -d openfire < optional/sql/001-generate-test-data.sql
+--      docker exec -i simple-db-1 psql -U openfire -d openfire \
+--        < optional/sql/postgresql/generate-test-messages.sql
 --
 -- =============================================================================
 
