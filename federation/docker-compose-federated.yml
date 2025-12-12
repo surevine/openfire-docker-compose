@@ -30,8 +30,12 @@ services:
       - "7071:7070"
       - "7441:7443"
       - "9091:9090"
+      - "5005:5005"
     depends_on:
       - "db1"
+    environment:
+      JAVA_TOOL_OPTIONS: >
+        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     volumes:
       - ./_data/xmpp/1/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
@@ -46,8 +50,12 @@ services:
       - "7072:7070"
       - "7442:7443"
       - "9092:9090"
+      - "5006:5005"
     depends_on:
       - "db2"
+    environment:
+      JAVA_TOOL_OPTIONS: >
+        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     volumes:
       - ./_data/xmpp/2/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins

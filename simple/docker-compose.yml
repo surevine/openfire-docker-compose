@@ -19,8 +19,12 @@ services:
       - "7070:7070"
       - "7443:7443"
       - "9090:9090"
+      - "5005:5005"
     depends_on:
       - "db"
+    environment:
+      JAVA_TOOL_OPTIONS: >
+        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     volumes:
       - ./_data/xmpp/conf:/var/lib/openfire/conf
       - ./_data/plugins:/opt/plugins
