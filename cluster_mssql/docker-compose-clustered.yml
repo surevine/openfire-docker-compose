@@ -47,6 +47,7 @@ services:
 
   xmpp1:
     image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
+    pull_policy: never
     ports:
       - "5221:5222"
       - "5261:5269"
@@ -63,6 +64,7 @@ services:
 
   xmpp2:
     image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
+    pull_policy: never
     ports:
       - "5222:5222"
       - "5262:5269"
@@ -79,6 +81,7 @@ services:
 
   xmpp3:
     image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
+    pull_policy: never
     ports:
       - "5223:5222"
       - "5263:5269"
