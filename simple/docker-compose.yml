@@ -13,6 +13,7 @@ services:
 
   xmpp1:
     image: "${OPENFIRE_IMAGE}:${OPENFIRE_TAG}"
+    pull_policy: never
     ports:
       - "5222:5222"
       - "5269:5269"
