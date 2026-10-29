@@ -96,3 +96,9 @@ Debug ports are exposed on localhost:
 | otherxmpp | 5008 |
 
 To attach your IDE, create a remote debug configuration pointing to `localhost` on the appropriate port.
+
+## Certificates
+
+Each environment ships its TLS stores in `xmpp/**/conf/security`. The `truststore` holds Mozilla's root store (the [CCADB](https://www.ccadb.org/resources) list of roots trusted for websites, as in Firefox) plus, in the federated environments, the self-signed certificate of each peer domain. The `keystore` holds a self-signed certificate for the server's XMPP domain, valid for ten years. The stores use Openfire's default password, `changeit`.
+
+To refresh Mozilla's root store or replace the certificates, run `./scripts/update_certificates.sh` and commit the changed stores.
