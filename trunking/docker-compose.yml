@@ -1,0 +1,139 @@
+version: '3.7'
+
+services:
+
+  domain1-db:
+    image: library/postgres:14.5-alpine
+    ports:
+      - "5431:5432"
+    environment:
+      - "POSTGRES_DB=openfire"
+      - "POSTGRES_USER=openfire"
+      - "POSTGRES_PASSWORD=hunter2"
+    volumes:
+      - ./sql/1:/docker-entrypoint-initdb.d
+    networks:
+      openfire-trunking-net:
+        ipv4_address: 172.50.0.101
+
+  domain2-db:
+    image: library/postgres:14.5-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - "POSTGRES_DB=openfire"
+      - "POSTGRES_USER=openfire"
+      - "POSTGRES_PASSWORD=hunter2"
+    volumes:
+      - ./sql/2:/docker-entrypoint-initdb.d
+    networks:
+      openfire-trunking-net:
+        ipv4_address: 172.50.0.151
+
+  domain3-db:
+    image: library/postgres:14.5-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      - "POSTGRES_DB=openfire"
+      - "POSTGRES_USER=openfire"
+      - "POSTGRES_PASSWORD=hunter2"
+    volumes:
+      - ./sql/3:/docker-entrypoint-initdb.d
+    networks:
+      openfire-trunking-net:
+        ipv4_address: 172.50.0.201
+
+  xmpp1:
+    image: "openfire:${OPENFIRE_TAG}"
+    ports:
+      - "5221:5222"
+      - "5261:5269"
+      - "7071:7070"
+      - "7441:7443"
+      - "9091:9090"
+    depends_on:
+      - "domain1-db"
+    volumes:
+      - ./_data/xmpp/1/conf:/var/lib/openfire/conf
+      - ./_data/plugins:/opt/plugins
+      - ../_common/wait-for-it.sh:/wait-for-it.sh
+    command: ["/wait-for-it.sh", "-s", "domain1-db:5432", "--", "/sbin/entrypoint.sh"]
+    networks:
+      openfire-trunking-net:
+        ipv4_address: 172.50.0.100
+    extra_hosts:
+      - "xmpp1.localhost.example:172.50.0.100"
+      - "conference.xmpp1.localhost.example:172.50.0.100"
+      - "xmpp2.localhost.example:172.50.0.150"
+      - "conference.xmpp2.localhost.example:172.50.0.150"
+      - "xmpp3.localhost.example:172.50.0.200"
+      - "conference.xmpp3.localhost.example:172.50.0.200"
+
+  xmpp2:
+    image: "openfire:${OPENFIRE_TAG}"
+    ports:
+      - "5222:5222"
+      - "5262:5269"
+      - "7072:7070"
+      - "7442:7443"
+      - "9092:9090"
+    depends_on:
+      - "domain2-db"
+    volumes:
+      - ./_data/xmpp/2/conf:/var/lib/openfire/conf
+      - ./_data/plugins:/opt/plugins
+      - ../_common/wait-for-it.sh:/wait-for-it.sh
+    command: ["/wait-for-it.sh", "-s", "domain2-db:5432", "--", "/sbin/entrypoint.sh"]
+    networks:
+      openfire-trunking-net:
+        ipv4_address: 172.50.0.150
+    extra_hosts:
+      - "xmpp1.localhost.example:172.50.0.100"
+      - "conference.xmpp1.localhost.example:172.50.0.100"
+      - "xmpp2.localhost.example:172.50.0.150"
+      - "conference.xmpp2.localhost.example:172.50.0.150"
+      - "xmpp3.localhost.example:172.50.0.200"
+      - "conference.xmpp3.localhost.example:172.50.0.200"
+
+  xmpp3:
+    image: "openfire:${OPENFIRE_TAG}"
+    ports:
+      - "5223:5222"
+      - "5263:5269"
+      - "7073:7070"
+      - "7443:7443"
+      - "9093:9090"
+    depends_on:
+      - "domain3-db"
+    volumes:
+      - ./_data/xmpp/3/conf:/var/lib/openfire/conf
+      - ./_data/plugins:/opt/plugins
+      - ../_common/wait-for-it.sh:/wait-for-it.sh
+    command: ["/wait-for-it.sh", "-s", "domain3-db:5432", "--", "/sbin/entrypoint.sh"]
+    networks:
+      openfire-trunking-net:
+        ipv4_address: 172.50.0.200
+    extra_hosts:
+      - "xmpp1.localhost.example:172.50.0.100"
+      - "conference.xmpp1.localhost.example:172.50.0.100"
+      - "xmpp2.localhost.example:172.50.0.150"
+      - "conference.xmpp2.localhost.example:172.50.0.150"
+      - "xmpp3.localhost.example:172.50.0.200"
+      - "conference.xmpp3.localhost.example:172.50.0.200"
+  
+  dozzle:
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9999:8080
+ 
+networks:
+  openfire-trunking-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.50.0.0/24
+
